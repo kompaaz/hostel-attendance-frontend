@@ -29,8 +29,7 @@ const LoginPage = () => {
         }
       );
 
-      alert("✅ Login successful");
-      router.push("/dashboard");
+      router.push("/take-attendance");
     } catch (err: any) {
       if (err.response) {
         setError(err.response.data?.message || "❌ Invalid credentials");

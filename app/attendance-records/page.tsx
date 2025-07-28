@@ -1,6 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
-import "../styles/attendance-record.css";
+import { useEffect, useState } from "react";
 import axios from "axios";
 
 type RecordEntry = {
@@ -60,44 +59,91 @@ const Page = () => {
   });
 
   return (
-    <>
-      <h1 className="pl-5 text-black text-3xl font-bold">
-        📋 Attendance List (Grouped by AD)
-      </h1>
-      {Object.entries(groupedByAD).map(([adUsername, sessions]) => (
-        <div className="ad-block m-10" key={adUsername}>
-          <h2 className="text-xl pb-5 font-bold">
-            🧑‍🏫 Assistant Director: {adUsername}
-          </h2>
-          {sessions.map((session, idx) => (
-            <div key={idx}>
-              <p className="text-black">
-                <strong>Date:</strong>{" "}
-                {new Date(session.date).toLocaleDateString("en-IN")}
-              </p>
-              <table>
-                <thead>
-                  <tr>
-                    <th>Student Name</th>
-                    <th>Account Number</th>
-                    <th>Status</th>
-                  </tr>
-                </thead>
-                <tbody className="text-black">
-                  {session.records.map((rec) => (
-                    <tr key={rec._id}>
-                      <td>{rec.name}</td>
-                      <td>{rec.accountNumber}</td>
-                      <td>{rec.status.charAt(0).toUpperCase() + rec.status.slice(1)}</td>
+    <main className="min-h-screen bg-gray-50 px-4 md:px-6 py-8 font-sans">
+      <div className="container mx-auto max-w-5xl">
+
+        {/* 🏫 Header with Logo and Title */}
+        <div className="flex flex-col sm:flex-row items-center justify-center sm:justify-start gap-4 mb-8">
+          <img
+            src="/logo.png" // Use the same logo path from your login page
+            alt="Sacred Heart Hostel Logo"
+            className="w-14 h-14 sm:w-16 sm:h-16 object-contain"
+          />
+          <div className="text-center sm:text-left">
+            <h1 className="text-2xl sm:text-3xl font-bold text-gray-800 font-mono">
+              Sacred Heart Hostel
+            </h1>
+            <p className="text-sm sm:text-base text-gray-600">E-Attendance Records</p>
+          </div>
+        </div>
+
+        {/* ⚠️ Error Message */}
+        {error && <p className="text-red-500 text-center mb-4">{error}</p>}
+
+        {/* 📋 Attendance Tables */}
+        <div className="grid gap-6 md:gap-8">
+          {attendanceGroups.map((group) => (
+            <div
+              key={group._id}
+              className="bg-white rounded-2xl shadow-md border border-gray-200 p-4 sm:p-6 transition hover:shadow-lg"
+            >
+              <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-4 sm:mb-5 gap-2">
+                <div>
+                  <h2 className="text-base sm:text-lg font-semibold text-gray-900">
+                    Assistant Director ID:{" "}
+                    <span className="text-blue-600 break-all">{group.ad}</span>
+                  </h2>
+                  <p className="text-xs sm:text-sm text-gray-500 mt-1">
+                    📅 {new Date(group.date).toLocaleString()} | Type:{" "}
+                    <span className="font-medium text-gray-700">{group.type}</span>
+                  </p>
+                </div>
+              </div>
+
+              <div className="overflow-x-auto">
+                <table className="min-w-full text-xs sm:text-sm divide-y divide-gray-200">
+                  <thead className="bg-gray-100 text-gray-700 uppercase tracking-wider text-[10px] sm:text-xs">
+                    <tr>
+                      <th className="px-2 sm:px-4 py-2 text-left">#</th>
+                      <th className="px-2 sm:px-4 py-2 text-left">Name</th>
+                      <th className="px-2 sm:px-4 py-2 text-left">Room No</th>
+                      <th className="px-2 sm:px-4 py-2 text-left">Status</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody className="divide-y divide-gray-100 text-gray-800">
+                    {group.records.map((record, index) => (
+                      <tr
+                        key={record._id}
+                        className={`transition ${
+                          record.status.toLowerCase() === "present"
+                            ? "bg-green-50 hover:bg-green-100"
+                            : "bg-red-50 hover:bg-red-100"
+                        }`}
+                      >
+                        <td className="px-2 sm:px-4 py-2">{index + 1}</td>
+                        <td className="px-2 sm:px-4 py-2 font-medium">{record.name}</td>
+                        <td className="px-2 sm:px-4 py-2">{record.accountNumber}</td>
+                        <td className="px-2 sm:px-4 py-2">
+                          <span
+                            className={`px-2 py-1 sm:px-3 rounded-full text-[10px] sm:text-xs font-semibold ${
+                              record.status.toLowerCase() === "present"
+                                ? "bg-green-200 text-green-800"
+                                : "bg-red-200 text-red-800"
+                            }`}
+                          >
+                            {record.status.toUpperCase()}
+                          </span>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             </div>
           ))}
         </div>
-      ))}
-    </>
+      </div>
+    </main>
   );
 };
 

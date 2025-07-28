@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from "react";
 import "../styles/attendance.css";
 import axios from "axios";
+import { useRouter } from "next/navigation";
 
 type Student = {
   _id: string;
@@ -27,6 +28,7 @@ const groupedUsers = {
 };
 
 const page = () => {
+  const router = useRouter();
   const [statusMap, setStatusMap] = useState<Record<number, string>>({});
   const [datetime, setDatetime] = useState(new Date());
   const [studentData, setStudentData] = useState<StudentData>({});
@@ -63,19 +65,31 @@ const page = () => {
     return { present, absent };
   };
 
-  const handleSave = () => {
-    const formattedRecords: any = [];
-    Object.entries(studentData).forEach(([room, students]) => {
-      students.forEach((student) => {
-        formattedRecords.push({
+  const handleSave = async () => {
+    const formattedRecords = Object.entries(studentData).flatMap(
+      ([_, students]) =>
+        students.map((student) => ({
           accountNumber: student.accNo,
           name: student.name,
           status: statusMap[student.accNo] || "absent",
-        });
-      });
-    });
-    console.log("Sending data:", formattedRecords);
-    // Simulate fetch or integrate API
+        }))
+    );
+
+    try {
+      const res = await axios.post(
+        "http://localhost:5000/api/attendance/mark",
+        { records: formattedRecords },
+        { withCredentials: true }
+      );
+
+      console.log("✅ Attendance saved:", res.data);
+      alert("✅ Attendance successfully saved!");
+      // Optionally redirect:
+      // router.push("/attendance-records");
+    } catch (err) {
+      console.error("❌ Error saving attendance:", err);
+      alert("❌ Failed to save attendance.");
+    }
   };
 
   const { present, absent } = getSummary();

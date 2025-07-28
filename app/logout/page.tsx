@@ -11,7 +11,7 @@ export default function LogoutPage() {
   useEffect(() => {
     const logout = async () => {
       try {
-        await axios.get('http://localhost:5000/api/auth/logout', {
+        await axios.get('https://hostel-attendance-backend.vercel.app/api/auth/logout', {
           withCredentials: true, // Send cookies/session if needed
         });
 

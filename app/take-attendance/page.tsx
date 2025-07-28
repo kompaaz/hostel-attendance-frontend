@@ -16,35 +16,32 @@ type StudentData = {
   [room: string]: Student[];
 };
 
-const groupedUsers = {
-  "101": [
-    { name: "Alice", accNo: "A001", dNo: "12" },
-    { name: "Bob", accNo: "B002", dNo: "14" },
-  ],
-  "102": [
-    { name: "Charlie", accNo: "C003", dNo: "16" },
-    { name: "David", accNo: "D004", dNo: "18" },
-  ],
-};
-
-const page = () => {
+const Page = () => {
   const router = useRouter();
   const [statusMap, setStatusMap] = useState<Record<number, string>>({});
-  const [datetime, setDatetime] = useState(new Date());
+  const [datetime, setDatetime] = useState<Date | null>(null);
   const [studentData, setStudentData] = useState<StudentData>({});
+const getStudentData = async () => {
+  try {
+    const response = await axios.get("http://localhost:5000/api/attendance", {
+      withCredentials: true,
+    });
 
-  const getStudentData = async () => {
-    try {
-      const response = await axios.get("http://localhost:5000/api/attendance", {
-        withCredentials: true,
-      });
-      console.log(response.data);
-      const grouped = response.data.students as StudentData;
+    const grouped = response.data?.students;
+
+    if (grouped && typeof grouped === "object") {
       setStudentData(grouped);
-    } catch (error) {
-      console.log("erro in get student data function " + error);
+    } else {
+      console.warn("❗Invalid student data received:", grouped);
+      setStudentData({}); // prevent crash
     }
-  };
+  } catch (error) {
+    console.error("❌ Error fetching student data:", error);
+    setStudentData({}); // prevent crash
+  }
+};
+
+
   useEffect(() => {
     getStudentData();
   }, []);
@@ -55,7 +52,7 @@ const page = () => {
   }, []);
 
   const handleStatusChange = (accNo: string, status: string) => {
-    setStatusMap((prev: any) => ({ ...prev, [accNo]: status }));
+    setStatusMap((prev) => ({ ...prev, [accNo]: status }));
   };
 
   const getSummary = () => {
@@ -81,10 +78,7 @@ const page = () => {
         { records: formattedRecords },
         { withCredentials: true }
       );
-
       console.log("✅ Attendance saved:", res.data);
-      // alert("✅ Attendance successfully saved!");
-      // Optionally redirect:
       router.push("/attendance-records");
     } catch (err) {
       console.error("❌ Error saving attendance:", err);
@@ -93,6 +87,7 @@ const page = () => {
   };
 
   const { present, absent } = getSummary();
+
   return (
     <>
       <header className="mb-5">
@@ -101,16 +96,17 @@ const page = () => {
           <h1 className="text-3xl font-bold">E-Attendance</h1>
         </div>
         <div id="datetime">
-          {new Date(datetime).toLocaleString("en-GB", {
-            weekday: "short", // Mon
-            day: "2-digit", // 28
-            month: "short", // Jul
-            year: "numeric", // 2025
-            hour: "numeric",
-            minute: "numeric",
-            second: "numeric",
-            hour12: true, // am/pm format
-          })}
+          {datetime &&
+            datetime.toLocaleString("en-GB", {
+              weekday: "short",
+              day: "2-digit",
+              month: "short",
+              year: "numeric",
+              hour: "numeric",
+              minute: "numeric",
+              second: "numeric",
+              hour12: true,
+            })}
         </div>
       </header>
 
@@ -135,7 +131,7 @@ const page = () => {
                         statusMap[student.accNo] === "present" ? "active" : ""
                       }`}
                       onClick={() =>
-                        handleStatusChange(student.accNo, "present")
+                        handleStatusChange(student.accNo.toString(), "present")
                       }
                     >
                       P
@@ -145,7 +141,7 @@ const page = () => {
                         statusMap[student.accNo] === "absent" ? "active" : ""
                       }`}
                       onClick={() =>
-                        handleStatusChange(student.accNo, "absent")
+                        handleStatusChange(student.accNo.toString(), "absent")
                       }
                     >
                       A
@@ -168,4 +164,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;

@@ -23,7 +23,7 @@ const Page = () => {
   const getAttendanceData = async () => {
     try {
       const response = await axios.get(
-        "http://localhost:5000/api/auth/display_attendance",
+        "https://hostel-attendance-backend.vercel.app/api/auth/display_attendance",
         { withCredentials: true }
       );
       setAttendanceGroups(response.data["attendance-records"]); // ✅ Update state here

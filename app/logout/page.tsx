@@ -1,8 +1,8 @@
-'use client'; // Only if using Next.js App Router
+"use client"; // Only if using Next.js App Router
 
-import { useEffect } from 'react';
-import axios from 'axios';
-import { useRouter } from 'next/navigation'; // For Next.js
+import { useEffect } from "react";
+import axios from "axios";
+import { useRouter } from "next/navigation"; // For Next.js
 // import { useRouter } from 'expo-router'; // For Expo Router (uncomment if using Expo)
 
 export default function LogoutPage() {
@@ -11,7 +11,8 @@ export default function LogoutPage() {
   useEffect(() => {
     const logout = async () => {
       try {
-        await axios.get('http://localhost:5000/api/auth/logout', {
+        await axios.get("http://localhost:5000/api/auth/logout", {
+          // await axios.get(`${process.env.BASE_URL}/api/auth/logout`, {
           withCredentials: true, // Send cookies/session if needed
         });
 
@@ -19,10 +20,10 @@ export default function LogoutPage() {
         localStorage.clear();
 
         // Redirect to login
-        router.push('/login');
+        router.push("/login");
       } catch (error) {
-        console.error('Logout failed:', error);
-        router.push('/login'); // Still redirect to login even if API call fails
+        console.error("Logout failed:", error);
+        router.push("/login"); // Still redirect to login even if API call fails
       }
     };
 

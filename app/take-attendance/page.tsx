@@ -1,6 +1,19 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import "../styles/attendance.css";
+import axios from "axios";
+
+type Student = {
+  _id: string;
+  name: string;
+  dNo: string;
+  accNo: number;
+  roomNo: string;
+};
+
+type StudentData = {
+  [room: string]: Student[];
+};
 
 const groupedUsers = {
   "101": [
@@ -14,8 +27,25 @@ const groupedUsers = {
 };
 
 const page = () => {
-  const [statusMap, setStatusMap] = useState<any>({});
+  const [statusMap, setStatusMap] = useState<Record<number, string>>({});
   const [datetime, setDatetime] = useState(new Date());
+  const [studentData, setStudentData] = useState<StudentData>({});
+
+  const getStudentData = async () => {
+    try {
+      const response = await axios.get("http://localhost:5000/api/attendance", {
+        withCredentials: true,
+      });
+      console.log(response.data);
+      const grouped = response.data.students as StudentData;
+      setStudentData(grouped);
+    } catch (error) {
+      console.log("erro in get student data function " + error);
+    }
+  };
+  useEffect(() => {
+    getStudentData();
+  }, []);
 
   useEffect(() => {
     const interval = setInterval(() => setDatetime(new Date()), 1000);
@@ -35,7 +65,7 @@ const page = () => {
 
   const handleSave = () => {
     const formattedRecords: any = [];
-    Object.entries(groupedUsers).forEach(([room, students]) => {
+    Object.entries(studentData).forEach(([room, students]) => {
       students.forEach((student) => {
         formattedRecords.push({
           accountNumber: student.accNo,
@@ -51,7 +81,7 @@ const page = () => {
   const { present, absent } = getSummary();
   return (
     <>
-      <header>
+      <header className="mb-5">
         <div className="header-left">
           <img src="/logo.png" alt="Logo" />
           <h1 className="text-3xl font-bold">E-Attendance</h1>
@@ -71,7 +101,7 @@ const page = () => {
       </header>
 
       <div id="attendance-container">
-        {Object.entries(groupedUsers).map(([room, students]) => (
+        {Object.entries(studentData).map(([room, students]) => (
           <div className="room-card" key={room}>
             <div className="room-title">Room {room}</div>
             <div className="student-list">

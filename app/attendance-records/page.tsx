@@ -13,17 +13,12 @@ type RawAttendance = {
   _id: string;
   ad: { _id: string; username: string };
   date: string;
-  records: RecordEntry[];
-};
-
-type AttendanceEntry = {
-  adUsername: string;
-  date: string;
+  type?: string; // Optional type field
   records: RecordEntry[];
 };
 
 const Page = () => {
-  const [attendance, setAttendance] = useState<AttendanceEntry[]>([]);
+  const [attendanceGroups, setAttendanceGroups] = useState<RawAttendance[]>([]);
 
   const getAttendanceData = async () => {
     try {
@@ -31,41 +26,21 @@ const Page = () => {
         "http://localhost:5000/api/auth/display_attendance",
         { withCredentials: true }
       );
-
-      const raw: { "attendance-records": RawAttendance[] } = response.data;
-
-      const mapped: AttendanceEntry[] = raw["attendance-records"].map((ea) => ({
-        adUsername: ea.ad.username,
-        date: ea.date,
-        records: ea.records,
-      }));
-      setAttendance(mapped);
+      setAttendanceGroups(response.data["attendance-records"]); // ✅ Update state here
     } catch (error) {
-      console.error("Failed fetching attendance:", error);
+      console.error("Failed fetching attendance for displaying:", error);
     }
   };
-
   useEffect(() => {
     getAttendanceData();
   }, []);
 
-  // Group by AD username
-  const groupedByAD: Record<string, AttendanceEntry[]> = {};
-  attendance.forEach((entry) => {
-    if (!groupedByAD[entry.adUsername]) {
-      groupedByAD[entry.adUsername] = [];
-    }
-    groupedByAD[entry.adUsername].push(entry);
-  });
-
   return (
     <main className="min-h-screen bg-gray-50 px-4 md:px-6 py-8 font-sans">
       <div className="container mx-auto max-w-5xl">
-
-        {/* 🏫 Header with Logo and Title */}
         <div className="flex flex-col sm:flex-row items-center justify-center sm:justify-start gap-4 mb-8">
           <img
-            src="/logo.png" // Use the same logo path from your login page
+            src="/logo.png"
             alt="Sacred Heart Hostel Logo"
             className="w-14 h-14 sm:w-16 sm:h-16 object-contain"
           />
@@ -73,14 +48,12 @@ const Page = () => {
             <h1 className="text-2xl sm:text-3xl font-bold text-gray-800 font-mono">
               Sacred Heart Hostel
             </h1>
-            <p className="text-sm sm:text-base text-gray-600">E-Attendance Records</p>
+            <p className="text-sm sm:text-base text-gray-600">
+              E-Attendance Records
+            </p>
           </div>
         </div>
 
-        {/* ⚠️ Error Message */}
-        {error && <p className="text-red-500 text-center mb-4">{error}</p>}
-
-        {/* 📋 Attendance Tables */}
         <div className="grid gap-6 md:gap-8">
           {attendanceGroups.map((group) => (
             <div
@@ -91,11 +64,15 @@ const Page = () => {
                 <div>
                   <h2 className="text-base sm:text-lg font-semibold text-gray-900">
                     Assistant Director ID:{" "}
-                    <span className="text-blue-600 break-all">{group.ad}</span>
+                    <span className="text-blue-600 break-all">
+                      {group.ad.username}
+                    </span>
                   </h2>
                   <p className="text-xs sm:text-sm text-gray-500 mt-1">
                     📅 {new Date(group.date).toLocaleString()} | Type:{" "}
-                    <span className="font-medium text-gray-700">{group.type}</span>
+                    <span className="font-medium text-gray-700">
+                      {group.type ?? "N/A"}
+                    </span>
                   </p>
                 </div>
               </div>
@@ -121,8 +98,12 @@ const Page = () => {
                         }`}
                       >
                         <td className="px-2 sm:px-4 py-2">{index + 1}</td>
-                        <td className="px-2 sm:px-4 py-2 font-medium">{record.name}</td>
-                        <td className="px-2 sm:px-4 py-2">{record.accountNumber}</td>
+                        <td className="px-2 sm:px-4 py-2 font-medium">
+                          {record.name}
+                        </td>
+                        <td className="px-2 sm:px-4 py-2">
+                          {record.accountNumber}
+                        </td>
                         <td className="px-2 sm:px-4 py-2">
                           <span
                             className={`px-2 py-1 sm:px-3 rounded-full text-[10px] sm:text-xs font-semibold ${

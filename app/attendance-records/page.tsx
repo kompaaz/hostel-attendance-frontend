@@ -2,49 +2,45 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 
-type AttendanceRecord = {
+type RecordEntry = {
+  _id: string;
   name: string;
   accountNumber: string;
   status: string;
-  _id: string;
 };
 
-type AttendanceGroup = {
+type RawAttendance = {
   _id: string;
-  ad: string;
-  type: string;
+  ad: { _id: string; username: string };
   date: string;
-  records: AttendanceRecord[];
+  type?: string; // Optional type field
+  records: RecordEntry[];
 };
 
-export default function AttendancePage() {
-  const [attendanceGroups, setAttendanceGroups] = useState<AttendanceGroup[]>([]);
-  const [error, setError] = useState<string>("");
+const Page = () => {
+  const [attendanceGroups, setAttendanceGroups] = useState<RawAttendance[]>([]);
 
+  const getAttendanceData = async () => {
+    try {
+      const response = await axios.get(
+        "http://localhost:5000/api/auth/display_attendance",
+        { withCredentials: true }
+      );
+      setAttendanceGroups(response.data["attendance-records"]); // ✅ Update state here
+    } catch (error) {
+      console.error("Failed fetching attendance for displaying:", error);
+    }
+  };
   useEffect(() => {
-    const getAttendanceRecords = async () => {
-      try {
-        const response = await axios.get(
-          "http://localhost:5000/api/auth/display_attendance"
-        );
-        setAttendanceGroups(response.data.attendance);
-      } catch (error) {
-        console.error("Error fetching attendance records:", error);
-        setError("Failed to fetch attendance records.");
-      }
-    };
-
-    getAttendanceRecords();
+    getAttendanceData();
   }, []);
 
   return (
     <main className="min-h-screen bg-gray-50 px-4 md:px-6 py-8 font-sans">
       <div className="container mx-auto max-w-5xl">
-
-        {/* 🏫 Header with Logo and Title */}
         <div className="flex flex-col sm:flex-row items-center justify-center sm:justify-start gap-4 mb-8">
           <img
-            src="/logo.png" // Use the same logo path from your login page
+            src="/logo.png"
             alt="Sacred Heart Hostel Logo"
             className="w-14 h-14 sm:w-16 sm:h-16 object-contain"
           />
@@ -52,14 +48,12 @@ export default function AttendancePage() {
             <h1 className="text-2xl sm:text-3xl font-bold text-gray-800 font-mono">
               Sacred Heart Hostel
             </h1>
-            <p className="text-sm sm:text-base text-gray-600">E-Attendance Records</p>
+            <p className="text-sm sm:text-base text-gray-600">
+              E-Attendance Records
+            </p>
           </div>
         </div>
 
-        {/* ⚠️ Error Message */}
-        {error && <p className="text-red-500 text-center mb-4">{error}</p>}
-
-        {/* 📋 Attendance Tables */}
         <div className="grid gap-6 md:gap-8">
           {attendanceGroups.map((group) => (
             <div
@@ -70,11 +64,15 @@ export default function AttendancePage() {
                 <div>
                   <h2 className="text-base sm:text-lg font-semibold text-gray-900">
                     Assistant Director ID:{" "}
-                    <span className="text-blue-600 break-all">{group.ad}</span>
+                    <span className="text-blue-600 break-all">
+                      {group.ad.username}
+                    </span>
                   </h2>
                   <p className="text-xs sm:text-sm text-gray-500 mt-1">
                     📅 {new Date(group.date).toLocaleString()} | Type:{" "}
-                    <span className="font-medium text-gray-700">{group.type}</span>
+                    <span className="font-medium text-gray-700">
+                      {group.type ?? "N/A"}
+                    </span>
                   </p>
                 </div>
               </div>
@@ -100,8 +98,12 @@ export default function AttendancePage() {
                         }`}
                       >
                         <td className="px-2 sm:px-4 py-2">{index + 1}</td>
-                        <td className="px-2 sm:px-4 py-2 font-medium">{record.name}</td>
-                        <td className="px-2 sm:px-4 py-2">{record.accountNumber}</td>
+                        <td className="px-2 sm:px-4 py-2 font-medium">
+                          {record.name}
+                        </td>
+                        <td className="px-2 sm:px-4 py-2">
+                          {record.accountNumber}
+                        </td>
                         <td className="px-2 sm:px-4 py-2">
                           <span
                             className={`px-2 py-1 sm:px-3 rounded-full text-[10px] sm:text-xs font-semibold ${
@@ -124,4 +126,6 @@ export default function AttendancePage() {
       </div>
     </main>
   );
-}
+};
+
+export default Page;

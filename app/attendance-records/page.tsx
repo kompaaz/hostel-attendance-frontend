@@ -23,6 +23,7 @@ const Page = () => {
   const getAttendanceData = async () => {
     try {
       const response = await axios.get(
+        // `${process.env.BASE_URL}/api/auth/display_attendance`,
         "http://localhost:5000/api/auth/display_attendance",
         { withCredentials: true }
       );

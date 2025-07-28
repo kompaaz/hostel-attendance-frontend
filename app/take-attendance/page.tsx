@@ -83,7 +83,7 @@ const page = () => {
       );
 
       console.log("✅ Attendance saved:", res.data);
-      alert("✅ Attendance successfully saved!");
+      // alert("✅ Attendance successfully saved!");
       // Optionally redirect:
       // router.push("/attendance-records");
     } catch (err) {

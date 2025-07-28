@@ -85,7 +85,7 @@ const page = () => {
       console.log("✅ Attendance saved:", res.data);
       // alert("✅ Attendance successfully saved!");
       // Optionally redirect:
-      // router.push("/attendance-records");
+      router.push("/attendance-records");
     } catch (err) {
       console.error("❌ Error saving attendance:", err);
       alert("❌ Failed to save attendance.");

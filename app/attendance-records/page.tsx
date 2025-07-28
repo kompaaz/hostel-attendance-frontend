@@ -24,7 +24,8 @@ const Page = () => {
     try {
       const response = await axios.get(
         // `${process.env.BASE_URL}/api/auth/display_attendance`,
-        "http://localhost:5000/api/auth/display_attendance",
+        "https://sh-backend.devnoel.org/api/auth/display_attendance",
+        // "http://localhost:5000/api/auth/display_attendance",
         { withCredentials: true }
       );
       setAttendanceGroups(response.data["attendance-records"]); // ✅ Update state here

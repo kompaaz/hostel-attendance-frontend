@@ -23,7 +23,8 @@ const Page = () => {
   const [studentData, setStudentData] = useState<StudentData>({});
   const getStudentData = async () => {
     try {
-      const response = await axios.get("http://localhost:5000/api/attendance", {
+      const response = await axios.get("https://sh-backend.devnoel.org/api/attendance", {
+      // const response = await axios.get("http://localhost:5000/api/attendance", {
         // const response = await axios.get(
         //   `https://hostel-attendance-backend.vercel.app/api/attendance`,
         //   {
@@ -76,7 +77,8 @@ const Page = () => {
 
     try {
       const res = await axios.post(
-        "http://localhost:5000/api/attendance/mark",
+        "https://sh-backend.devnoel.org/api/attendance/mark",
+        // "http://localhost:5000/api/attendance/mark",
         // `${process.env.BASE_URL}/api/attendance/mark`,
         { records: formattedRecords },
         { withCredentials: true }

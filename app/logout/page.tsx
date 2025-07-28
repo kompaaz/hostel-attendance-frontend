@@ -11,7 +11,8 @@ export default function LogoutPage() {
   useEffect(() => {
     const logout = async () => {
       try {
-        await axios.get("http://localhost:5000/api/auth/logout", {
+        await axios.get("https://sh-backend.devnoel.org/api/auth/logout", {
+        // await axios.get("http://localhost:5000/api/auth/logout", {
           // await axios.get(`${process.env.BASE_URL}/api/auth/logout`, {
           withCredentials: true, // Send cookies/session if needed
         });

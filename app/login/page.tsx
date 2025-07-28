@@ -20,6 +20,8 @@ const LoginPage = () => {
     try {
       const response = await axios.post(
         "http://localhost:5000/api/auth/login",
+        // `${process.env.BASE_URL}/api/auth/login`,
+          // "https://hostel-attendance-backend.vercel.app/api/auth/login",
         { username, password },
         {
           headers: {
@@ -65,7 +67,10 @@ const LoginPage = () => {
 
         <form onSubmit={handleSubmit} className="space-y-5 font-mono">
           <div>
-            <label htmlFor="username" className="text-sm font-medium text-black mb-1 block">
+            <label
+              htmlFor="username"
+              className="text-sm font-medium text-black mb-1 block"
+            >
               Username
             </label>
             <input
@@ -80,7 +85,10 @@ const LoginPage = () => {
           </div>
 
           <div>
-            <label htmlFor="password" className="text-sm font-medium text-black mb-1 block">
+            <label
+              htmlFor="password"
+              className="text-sm font-medium text-black mb-1 block"
+            >
               Password
             </label>
             <div className="relative">

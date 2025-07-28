@@ -21,26 +21,28 @@ const Page = () => {
   const [statusMap, setStatusMap] = useState<Record<number, string>>({});
   const [datetime, setDatetime] = useState<Date | null>(null);
   const [studentData, setStudentData] = useState<StudentData>({});
-const getStudentData = async () => {
-  try {
-    const response = await axios.get("http://localhost:5000/api/attendance", {
-      withCredentials: true,
-    });
+  const getStudentData = async () => {
+    try {
+      const response = await axios.get("http://localhost:5000/api/attendance", {
+        // const response = await axios.get(
+        //   `https://hostel-attendance-backend.vercel.app/api/attendance`,
+        //   {
+        withCredentials: true,
+      });
 
-    const grouped = response.data?.students;
+      const grouped = response.data?.students;
 
-    if (grouped && typeof grouped === "object") {
-      setStudentData(grouped);
-    } else {
-      console.warn("❗Invalid student data received:", grouped);
+      if (grouped && typeof grouped === "object") {
+        setStudentData(grouped);
+      } else {
+        console.warn("❗Invalid student data received:", grouped);
+        setStudentData({}); // prevent crash
+      }
+    } catch (error) {
+      console.error("❌ Error fetching student data:", error);
       setStudentData({}); // prevent crash
     }
-  } catch (error) {
-    console.error("❌ Error fetching student data:", error);
-    setStudentData({}); // prevent crash
-  }
-};
-
+  };
 
   useEffect(() => {
     getStudentData();
@@ -75,6 +77,7 @@ const getStudentData = async () => {
     try {
       const res = await axios.post(
         "http://localhost:5000/api/attendance/mark",
+        // `${process.env.BASE_URL}/api/attendance/mark`,
         { records: formattedRecords },
         { withCredentials: true }
       );

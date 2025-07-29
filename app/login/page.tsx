@@ -22,7 +22,7 @@ const LoginPage = () => {
         "https://sh-backend.devnoel.org/api/auth/login",
         // "http://localhost:5000/api/auth/login",
         // `${process.env.BASE_URL}/api/auth/login`,
-          // "https://hostel-attendance-backend.vercel.app/api/auth/login",
+        // "https://hostel-attendance-backend.vercel.app/api/auth/login",
         { username, password },
         {
           headers: {
@@ -31,9 +31,11 @@ const LoginPage = () => {
           withCredentials: true,
         }
       );
+      console.log(response);
 
       router.push("/take-attendance");
     } catch (err: any) {
+      console.log(err.message);
       if (err.response) {
         setError(err.response.data?.message || "❌ Invalid credentials");
       } else {

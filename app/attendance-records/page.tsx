@@ -23,12 +23,12 @@ const Page = () => {
   const getAttendanceData = async () => {
     try {
       const response = await axios.get(
-        // `${process.env.BASE_URL}/api/auth/display_attendance`,
-        "https://sh-backend.devnoel.org/api/auth/display_attendance",
-        // "http://localhost:5000/api/auth/display_attendance",
+        // `${process.env.BASE_URL}/api/attendance/get-attendance-records`,
+        "https://sh-backend.devnoel.org/api/attendance/get-attendance-records",
+        // "http://localhost:5000/api/attendance/get-attendance-records",
         { withCredentials: true }
       );
-      setAttendanceGroups(response.data["attendance-records"]); // ✅ Update state here
+      setAttendanceGroups(response.data["attendance-records"]);
     } catch (error) {
       console.error("Failed fetching attendance for displaying:", error);
     }

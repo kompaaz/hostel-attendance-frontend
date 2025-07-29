@@ -77,8 +77,8 @@ const Page = () => {
 
     try {
       const res = await axios.post(
-        "https://sh-backend.devnoel.org/api/attendance/mark",
-        // "http://localhost:5000/api/attendance/mark",
+        // "https://sh-backend.devnoel.org/api/attendance/mark",
+        "http://localhost:5000/api/attendance/mark",
         // `${process.env.BASE_URL}/api/attendance/mark`,
         { records: formattedRecords },
         { withCredentials: true }

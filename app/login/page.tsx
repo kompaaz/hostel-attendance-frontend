@@ -32,8 +32,19 @@ const LoginPage = () => {
         }
       );
       console.log(response);
+      const userRole = response.data?.user?.role;
 
-      router.push("/take-attendance");
+      // Redirect based on role
+      if (userRole === "director") {
+        router.push("/attendance-records");
+      } else if (userRole === "student") {
+        router.push("/student/dashboard");
+      } else if (userRole === "ad") {
+        router.push("/take-attendance");
+      } else {
+        setError("❌ Unknown role. Contact support.");
+      }
+      // router.push("/take-attendance");
     } catch (err: any) {
       console.log(err.message);
       if (err.response) {

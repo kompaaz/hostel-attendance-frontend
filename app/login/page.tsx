@@ -40,7 +40,7 @@ const LoginPage = () => {
       } else if (userRole === "student") {
         router.push("/student/dashboard");
       } else if (userRole === "ad") {
-        router.push("/ad/take-attendance");
+        router.push("/take-attendance");
       } else {
         setError("❌ Unknown role. Contact support.");
       }

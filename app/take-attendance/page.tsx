@@ -69,6 +69,7 @@ const Page = () => {
     const formattedRecords = Object.entries(studentData).flatMap(
       ([_, students]) =>
         students.map((student) => ({
+          roomNo: student.roomNo,
           accountNumber: student.accNo,
           name: student.name,
           status: statusMap[student.accNo] || "absent",

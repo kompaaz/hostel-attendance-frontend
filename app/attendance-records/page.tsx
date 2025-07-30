@@ -5,6 +5,7 @@ import axios from "axios";
 type RecordEntry = {
   _id: string;
   name: string;
+  roomNo: string;
   accountNumber: string;
   status: string;
 };
@@ -28,6 +29,7 @@ const Page = () => {
         // "http://localhost:5000/api/attendance/get-attendance-records",
         { withCredentials: true }
       );
+      
       setAttendanceGroups(response.data["attendance-records"]);
     } catch (error) {
       console.error("Failed fetching attendance for displaying:", error);
@@ -86,6 +88,7 @@ const Page = () => {
                       <th className="px-2 sm:px-4 py-2 text-left">#</th>
                       <th className="px-2 sm:px-4 py-2 text-left">Name</th>
                       <th className="px-2 sm:px-4 py-2 text-left">Room No</th>
+                      <th className="px-2 sm:px-4 py-2 text-left">Acc No</th>
                       <th className="px-2 sm:px-4 py-2 text-left">Status</th>
                     </tr>
                   </thead>
@@ -102,6 +105,9 @@ const Page = () => {
                         <td className="px-2 sm:px-4 py-2">{index + 1}</td>
                         <td className="px-2 sm:px-4 py-2 font-medium">
                           {record.name}
+                        </td>
+                        <td className="px-2 sm:px-4 py-2">
+                          {record.roomNo}
                         </td>
                         <td className="px-2 sm:px-4 py-2">
                           {record.accountNumber}

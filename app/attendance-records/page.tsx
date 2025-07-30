@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import Link from "next/link";
 
 type RecordEntry = {
   _id: string;
@@ -132,6 +133,12 @@ const Page = () => {
           ))}
         </div>
       </div>
+      <Link
+        href="/logout"
+        className="mt-8 inline-block text-blue-600 hover:underline"
+      >
+        <button>Logout</button>
+      </Link>
     </main>
   );
 };

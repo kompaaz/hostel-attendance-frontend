@@ -1,9 +1,7 @@
-"use client"; // Only if using Next.js App Router
-
+"use client"; 
 import { useEffect } from "react";
 import axios from "axios";
-import { useRouter } from "next/navigation"; // For Next.js
-// import { useRouter } from 'expo-router'; // For Expo Router (uncomment if using Expo)
+import { useRouter } from "next/navigation";
 
 export default function LogoutPage() {
   const router = useRouter();

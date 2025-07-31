@@ -25,15 +25,13 @@ const Page = () => {
   const getAttendanceData = async () => {
     try {
       const response = await axios.get(
-        // `${process.env.BASE_URL}/api/attendance/get-attendance-records`,
-        "https://sh-backend.devnoel.org/api/attendance/get-attendance-records",
-        // "http://localhost:5000/api/attendance/get-attendance-records",
+        `${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}/api/attendance/get-attendance-records`,
         { withCredentials: true }
       );
-      
+
       setAttendanceGroups(response.data["attendance-records"]);
     } catch (error) {
-      console.error("Failed fetching attendance for displaying:", error);
+      // console.error("Failed fetching attendance for displaying:", error);
     }
   };
   useEffect(() => {
@@ -47,7 +45,7 @@ const Page = () => {
           <img
             src="/logo.png"
             alt="Sacred Heart Hostel Logo"
-            className="w-14 h-14 sm:w-16 sm:h-16 object-contain"
+            className="w-24 h-24 sm:w-16 sm:h-16 object-contain"
           />
           <div className="text-center sm:text-left">
             <h1 className="text-2xl sm:text-3xl font-bold text-gray-800 font-mono">
@@ -107,9 +105,7 @@ const Page = () => {
                         <td className="px-2 sm:px-4 py-2 font-medium">
                           {record.name}
                         </td>
-                        <td className="px-2 sm:px-4 py-2">
-                          {record.roomNo}
-                        </td>
+                        <td className="px-2 sm:px-4 py-2">{record.roomNo}</td>
                         <td className="px-2 sm:px-4 py-2">
                           {record.accountNumber}
                         </td>

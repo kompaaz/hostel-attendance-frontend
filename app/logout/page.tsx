@@ -1,4 +1,4 @@
-"use client"; 
+"use client";
 import { useEffect } from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
@@ -9,11 +9,12 @@ export default function LogoutPage() {
   useEffect(() => {
     const logout = async () => {
       try {
-        await axios.get("https://sh-backend.devnoel.org/api/auth/logout", {
-        // await axios.get("http://localhost:5000/api/auth/logout", {
-          // await axios.get(`${process.env.BASE_URL}/api/auth/logout`, {
-          withCredentials: true, // Send cookies/session if needed
-        });
+        const reponse = await axios.get(
+          `${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}/api/auth/logout`,
+          {
+            withCredentials: true, // Send cookies/session if needed
+          }
+        );
 
         // Optionally clear any localStorage or tokens
         localStorage.clear();

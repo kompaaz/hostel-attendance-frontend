@@ -23,13 +23,16 @@ const Page = () => {
   const [studentData, setStudentData] = useState<StudentData>({});
   const getStudentData = async () => {
     try {
-      const response = await axios.get("https://sh-backend.devnoel.org/api/attendance", {
-      // const response = await axios.get("http://localhost:5000/api/attendance", {
-        // const response = await axios.get(
-        //   `https://hostel-attendance-backend.vercel.app/api/attendance`,
-        //   {
-        withCredentials: true,
-      });
+      const response = await axios.get(
+        "https://sh-backend.devnoel.org/api/attendance",
+        {
+          // const response = await axios.get("http://localhost:5000/api/attendance", {
+          // const response = await axios.get(
+          //   `https://hostel-attendance-backend.vercel.app/api/attendance`,
+          //   {
+          withCredentials: true,
+        }
+      );
 
       const grouped = response.data?.students;
 
@@ -94,6 +97,23 @@ const Page = () => {
 
   const { present, absent } = getSummary();
 
+  useEffect(() => {
+    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+      if (Object.keys(statusMap).length > 0) {
+        e.preventDefault();
+        e.returnValue = ""; // Required for Chrome to show prompt
+        // You cannot use alert() here — it will be blocked
+      }
+    };
+
+    window.addEventListener("beforeunload", handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
+  }, [statusMap]);
+
+
   return (
     <>
       <header className="mb-5">
@@ -133,9 +153,8 @@ const Page = () => {
                   </div>
                   <div className="status-buttons">
                     <button
-                      className={`status-btn present ${
-                        statusMap[student.accNo] === "present" ? "active" : ""
-                      }`}
+                      className={`status-btn present ${statusMap[student.accNo] === "present" ? "active" : ""
+                        }`}
                       onClick={() =>
                         handleStatusChange(student.accNo.toString(), "present")
                       }
@@ -143,9 +162,8 @@ const Page = () => {
                       P
                     </button>
                     <button
-                      className={`status-btn absent ${
-                        statusMap[student.accNo] === "absent" ? "active" : ""
-                      }`}
+                      className={`status-btn absent ${statusMap[student.accNo] === "absent" ? "active" : ""
+                        }`}
                       onClick={() =>
                         handleStatusChange(student.accNo.toString(), "absent")
                       }
@@ -160,9 +178,18 @@ const Page = () => {
         ))}
       </div>
 
-      <button id="saveBtn" onClick={handleSave}>
+      <button
+        id="saveBtn"
+        onClick={async () => {
+          const confirmSave = window.confirm("Do you want to save the attendance?");
+          if (confirmSave) {
+            await handleSave();
+          }
+        }}
+      >
         ✅ Save Attendance
       </button>
+
       <div id="summary">
         Total Present: {present} | Total Absent: {absent}
       </div>

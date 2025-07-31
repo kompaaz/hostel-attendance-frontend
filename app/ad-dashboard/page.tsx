@@ -48,7 +48,7 @@ const AdDashboard = () => {
     };
 
     return (
-        <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
+        <div className="min-h-screen bg-gray-100 flex items-center justify-center px-4">
             <div className="w-full max-w-md bg-white rounded-2xl shadow-md p-8 font-mono text-center space-y-6">
                 {/* Logo */}
                 <div className="flex justify-center mb-2">
@@ -60,7 +60,7 @@ const AdDashboard = () => {
                 </div>
 
                 {/* Personalized Greeting */}
-                <h2 className="text-2xl md:text-3xl font-bold text-black mb-1">
+                <h2 className="text-2xl text-center w-full md:text-2xl font-bold text-black mb-1">
                     {getGreeting()},{adName} 🎉
                 </h2>
 
@@ -125,8 +125,8 @@ const AdDashboard = () => {
                 {/* Logout Button */}
                 <button
                     onClick={() => router.push("/logout")}
-                    className="mt-4 px-5 py-2 rounded-full font-semibold border-2 shadow transition-transform duration-200 transform
-    bg-white  border-black hover:bg-white hover:text-black hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2
+                    className="mt-4 px-5 py-2 rounded-full font-semibold border-2  shadow transition-transform duration-200 transform
+    bg-white  hover:border-black hover:bg-white hover:text-black hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2
     dark:bg-black dark:text-white dark:border-white dark:hover:scale-105"
                 >
                     Logout

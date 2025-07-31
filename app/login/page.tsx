@@ -19,10 +19,7 @@ const LoginPage = () => {
 
     try {
       const response = await axios.post(
-        "https://sh-backend.devnoel.org/api/auth/login",
-        // "http://localhost:5000/api/auth/login",
-        // `${process.env.BASE_URL}/api/auth/login`,
-        // "https://hostel-attendance-backend.vercel.app/api/auth/login",
+        `${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}/api/auth/login`,
         { username, password },
         {
           headers: {
@@ -31,7 +28,7 @@ const LoginPage = () => {
           withCredentials: true,
         }
       );
-      console.log(response);
+      // console.log(response);
       const userRole = response.data?.user?.role;
 
       // Redirect based on role
@@ -67,7 +64,7 @@ const LoginPage = () => {
           <img
             src="/logo.png" // Replace with your logo path
             alt="Sacred Heart Logo"
-            className="w-16 h-16 object-contain"
+            className="w-24 h-24 object-contain"
           />
         </div>
 

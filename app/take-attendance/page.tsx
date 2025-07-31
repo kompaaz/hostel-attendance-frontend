@@ -24,12 +24,8 @@ const Page = () => {
   const getStudentData = async () => {
     try {
       const response = await axios.get(
-        "https://sh-backend.devnoel.org/api/attendance",
+        `${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}/api/attendance`,
         {
-          // const response = await axios.get("http://localhost:5000/api/attendance", {
-          // const response = await axios.get(
-          //   `https://hostel-attendance-backend.vercel.app/api/attendance`,
-          //   {
           withCredentials: true,
         }
       );
@@ -39,11 +35,11 @@ const Page = () => {
       if (grouped && typeof grouped === "object") {
         setStudentData(grouped);
       } else {
-        console.warn("❗Invalid student data received:", grouped);
+        // console.warn("❗Invalid student data received:", grouped);
         setStudentData({}); // prevent crash
       }
     } catch (error) {
-      console.error("❌ Error fetching student data:", error);
+      // console.error("❌ Error fetching student data:", error);
       setStudentData({}); // prevent crash
     }
   };
@@ -81,16 +77,13 @@ const Page = () => {
 
     try {
       const res = await axios.post(
-        "https://sh-backend.devnoel.org/api/attendance/mark",
-        // "http://localhost:5000/api/attendance/mark",
-        // `${process.env.BASE_URL}/api/attendance/mark`,
+        `${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}/api/attendance/mark`,
         { records: formattedRecords },
         { withCredentials: true }
       );
-      console.log("✅ Attendance saved:", res.data);
       router.push("/attendance-records");
     } catch (err) {
-      console.error("❌ Error saving attendance:", err);
+      // console.error("❌ Error saving attendance:", err);
       alert("❌ Failed to save attendance.");
     }
   };
@@ -112,7 +105,6 @@ const Page = () => {
       window.removeEventListener("beforeunload", handleBeforeUnload);
     };
   }, [statusMap]);
-
 
   return (
     <>
@@ -153,8 +145,9 @@ const Page = () => {
                   </div>
                   <div className="status-buttons">
                     <button
-                      className={`status-btn present ${statusMap[student.accNo] === "present" ? "active" : ""
-                        }`}
+                      className={`status-btn present ${
+                        statusMap[student.accNo] === "present" ? "active" : ""
+                      }`}
                       onClick={() =>
                         handleStatusChange(student.accNo.toString(), "present")
                       }
@@ -162,8 +155,9 @@ const Page = () => {
                       P
                     </button>
                     <button
-                      className={`status-btn absent ${statusMap[student.accNo] === "absent" ? "active" : ""
-                        }`}
+                      className={`status-btn absent ${
+                        statusMap[student.accNo] === "absent" ? "active" : ""
+                      }`}
                       onClick={() =>
                         handleStatusChange(student.accNo.toString(), "absent")
                       }
@@ -181,7 +175,9 @@ const Page = () => {
       <button
         id="saveBtn"
         onClick={async () => {
-          const confirmSave = window.confirm("Do you want to save the attendance?");
+          const confirmSave = window.confirm(
+            "Do you want to save the attendance?"
+          );
           if (confirmSave) {
             await handleSave();
           }

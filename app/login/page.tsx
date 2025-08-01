@@ -87,7 +87,7 @@ const LoginPage = () => {
           </div>
         </div>
       ) : (
-        <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
+        <div className="h-screen bg-gray-50 flex items-center justify-center px-4">
           <div className="w-full max-w-md bg-white rounded-2xl shadow-md p-8">
             {/* Logo */}
             <div className="flex justify-center mb-4">

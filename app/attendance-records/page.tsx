@@ -62,7 +62,7 @@ const Page = () => {
         >
           🔙 Back to Dashboard
         </button>
-        <div className="w-[90vw] ">
+        <div className="w-[90vw] space-y-10">
         {/* <div className="grid gap-6 md:gap-8 bg-green-500"> */}
           {attendanceGroups.map((group) => (
             <div
@@ -141,7 +141,7 @@ const Page = () => {
       >
         <button>Logout</button>
       </Link>
-    </main>
+    </div>
   );
 };
 

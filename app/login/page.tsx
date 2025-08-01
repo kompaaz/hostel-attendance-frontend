@@ -14,7 +14,6 @@ const LoginPage = () => {
   const router = useRouter();
 
   useEffect(() => {
-    console.log(1);
     (async () => {
       try {
         const response = await axios.get(
@@ -22,13 +21,12 @@ const LoginPage = () => {
           { withCredentials: true }
         );
         const isLoggedIn = response.data.isLoggedIn;
-        console.log(response.data.isLoggedIn);
         if (!isLoggedIn) {
           return setcheckingUserStatus(false);
         }
         router.push("/ad-dashboard");
       } catch (error) {
-        console.log("Error in isUserLoggedIn \n" + error);
+        // console.log("Error in isUserLoggedIn \n" + error);
       }
     })();
   }, []);
@@ -51,8 +49,6 @@ const LoginPage = () => {
       );
       // console.log(response);
       const userRole = response.data?.user?.role;
-      console.log(userRole);
-      console.log(response);
 
       // Redirect based on role
       if (userRole === "director") {
@@ -66,7 +62,7 @@ const LoginPage = () => {
       }
       // router.push("/take-attendance");
     } catch (err: any) {
-      console.log(err.message);
+      // console.log(err.message);
       if (err.response) {
         setError(err.response.data?.message || "❌ Invalid credentials");
       } else {

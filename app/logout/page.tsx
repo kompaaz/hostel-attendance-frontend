@@ -30,5 +30,16 @@ export default function LogoutPage() {
     logout();
   }, [router]);
 
-  return <p>Logging you out...</p>;
+  return (
+    <div>
+      <div className="h-screen w-screen flex items-center justify-center">
+        <div className="flex gap-2">
+          <div className="flex gap-3">
+            <div className="h-7 w-7 border-4 border-t-green-500 border-b-white rounded-full animate-spin"></div>
+          </div>
+          <h1 className="text-2xl">Logging you out...</h1>
+        </div>
+      </div>
+    </div>
+  );
 }

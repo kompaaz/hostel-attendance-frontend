@@ -8,7 +8,7 @@ const page = () => {
     router.push("/login")
   }, []);
 
-  return <div>page</div>;
+  return <div>Sacred Heart Hostel</div>;
 };
 
 export default page;

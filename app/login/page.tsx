@@ -37,7 +37,7 @@ const LoginPage = () => {
       } else if (userRole === "student") {
         router.push("/student/dashboard");
       } else if (userRole === "ad") {
-        router.push("/take-attendance");
+        router.push("/ad-dashboard");
       } else {
         setError("❌ Unknown role. Contact support.");
       }
@@ -73,7 +73,7 @@ const LoginPage = () => {
           Sacred Heart Hostel
         </h2>
         <p className="text-sm text-black text-center mb-6">
-          E - Attendance Login
+          St. Joseph's College, Trichy
         </p>
 
         <form onSubmit={handleSubmit} className="space-y-5 font-mono">
@@ -126,9 +126,8 @@ const LoginPage = () => {
           <button
             type="submit"
             disabled={loading}
-            className={`w-full py-2 rounded-lg bg-black text-white font-semibold transition hover:bg-gray-900 ${
-              loading ? "opacity-50 cursor-not-allowed" : ""
-            }`}
+            className={`w-full py-2 rounded-lg bg-black text-white font-semibold transition hover:bg-gray-900 ${loading ? "opacity-50 cursor-not-allowed" : ""
+              }`}
           >
             {loading ? "Logging in..." : "Login"}
           </button>

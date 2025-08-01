@@ -136,6 +136,13 @@ const Page = () => {
             })}
         </div>
       </header>
+      <button
+        onClick={() => router.push("/ad-dashboard")}
+        className="mb-4 px-4 py-2 rounded-lg border font-mono border-black bg-white text-black font-semibold transition hover:scale-105"
+      >
+        🔙 Back to Dashboard
+      </button>
+
 
       <div id="attendance-container">
         {Object.entries(studentData).map(([room, students]) => (
@@ -154,9 +161,8 @@ const Page = () => {
                   </div>
                   <div className="status-buttons">
                     <button
-                      className={`status-btn present ${
-                        statusMap[student.accNo] === "present" ? "active" : ""
-                      }`}
+                      className={`status-btn present ${statusMap[student.accNo] === "present" ? "active" : ""
+                        }`}
                       onClick={() =>
                         handleStatusChange(student.accNo.toString(), "present")
                       }
@@ -164,9 +170,8 @@ const Page = () => {
                       P
                     </button>
                     <button
-                      className={`status-btn absent ${
-                        statusMap[student.accNo] === "absent" ? "active" : ""
-                      }`}
+                      className={`status-btn absent ${statusMap[student.accNo] === "absent" ? "active" : ""
+                        }`}
                       onClick={() =>
                         handleStatusChange(student.accNo.toString(), "absent")
                       }

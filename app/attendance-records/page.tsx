@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import Link from "next/link";
-
+import { useRouter } from "next/navigation";
 type RecordEntry = {
   _id: string;
   name: string;
@@ -21,7 +21,7 @@ type RawAttendance = {
 
 const Page = () => {
   const [attendanceGroups, setAttendanceGroups] = useState<RawAttendance[]>([]);
-
+  const router = useRouter();
   const getAttendanceData = async () => {
     try {
       const response = await axios.get(
@@ -39,7 +39,7 @@ const Page = () => {
   }, []);
 
   return (
-    <main className="min-h-screen bg-gray-50 px-4 md:px-6 py-8 font-sans">
+    <main className="min-h-screen min-w-screen bg-gray-50 px-4 md:px-6 py-8 font-sans">
       <div className="container mx-auto max-w-5xl">
         <div className="flex flex-col sm:flex-row items-center justify-center sm:justify-start gap-4 mb-8">
           <img
@@ -56,7 +56,12 @@ const Page = () => {
             </p>
           </div>
         </div>
-
+        <button
+          onClick={() => router.push("/ad-dashboard")}
+          className="mb-4 px-4 py-2 rounded-lg border font-mono border-black bg-white text-black font-semibold transition hover:scale-105"
+        >
+          🔙 Back to Dashboard
+        </button>
         <div className="grid gap-6 md:gap-8">
           {attendanceGroups.map((group) => (
             <div
@@ -95,11 +100,10 @@ const Page = () => {
                     {group.records.map((record, index) => (
                       <tr
                         key={record._id}
-                        className={`transition ${
-                          record.status.toLowerCase() === "present"
-                            ? "bg-green-50 hover:bg-green-100"
-                            : "bg-red-50 hover:bg-red-100"
-                        }`}
+                        className={`transition ${record.status.toLowerCase() === "present"
+                          ? "bg-green-50 hover:bg-green-100"
+                          : "bg-red-50 hover:bg-red-100"
+                          }`}
                       >
                         <td className="px-2 sm:px-4 py-2">{index + 1}</td>
                         <td className="px-2 sm:px-4 py-2 font-medium">
@@ -111,11 +115,10 @@ const Page = () => {
                         </td>
                         <td className="px-2 sm:px-4 py-2">
                           <span
-                            className={`px-2 py-1 sm:px-3 rounded-full text-[10px] sm:text-xs font-semibold ${
-                              record.status.toLowerCase() === "present"
-                                ? "bg-green-200 text-green-800"
-                                : "bg-red-200 text-red-800"
-                            }`}
+                            className={`px-2 py-1 sm:px-3 rounded-full text-[10px] sm:text-xs font-semibold ${record.status.toLowerCase() === "present"
+                              ? "bg-green-200 text-green-800"
+                              : "bg-red-200 text-red-800"
+                              }`}
                           >
                             {record.status.toUpperCase()}
                           </span>

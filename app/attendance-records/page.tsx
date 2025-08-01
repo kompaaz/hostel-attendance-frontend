@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import Link from "next/link";
-
+import { useRouter } from "next/navigation";
 type RecordEntry = {
   _id: string;
   name: string;
@@ -21,7 +21,7 @@ type RawAttendance = {
 
 const Page = () => {
   const [attendanceGroups, setAttendanceGroups] = useState<RawAttendance[]>([]);
-
+  const router = useRouter();
   const getAttendanceData = async () => {
     try {
       const response = await axios.get(
@@ -56,7 +56,12 @@ const Page = () => {
             </p>
           </div>
         </div>
-
+        <button
+          onClick={() => router.push("/ad-dashboard")}
+          className="mb-4 px-4 py-2 rounded-lg border font-mono border-black bg-white text-black font-semibold transition hover:scale-105"
+        >
+          🔙 Back to Dashboard
+        </button>
         <div className="grid gap-6 md:gap-8">
           {attendanceGroups.map((group) => (
             <div

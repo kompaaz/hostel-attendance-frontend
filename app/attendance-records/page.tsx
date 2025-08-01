@@ -135,12 +135,6 @@ const Page = () => {
           ))}
         </div>
       </div>
-      <Link
-        href="/logout"
-        className="mt-8 inline-block text-blue-600 hover:underline"
-      >
-        <button>Logout</button>
-      </Link>
     </div>
   );
 };

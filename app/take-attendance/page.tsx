@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import "../styles/attendance.css";
 import axios from "axios";
-import { useRouter } from "next/navigation";
+import { useRouter, useSelectedLayoutSegments } from "next/navigation";
 
 type Student = {
   _id: string;
@@ -21,6 +21,9 @@ const Page = () => {
   const [statusMap, setStatusMap] = useState<Record<number, string>>({});
   const [datetime, setDatetime] = useState<Date | null>(null);
   const [studentData, setStudentData] = useState<StudentData>({});
+  const [disableSubmitButton, setdisableSubmitButton] =
+    useState<boolean>(false);
+
   const getStudentData = async () => {
     try {
       const response = await axios.get(
@@ -65,6 +68,10 @@ const Page = () => {
   };
 
   const handleSave = async () => {
+    setdisableSubmitButton(true);
+    setTimeout(() => {
+      setdisableSubmitButton(false);
+    }, 5000);
     const formattedRecords = Object.entries(studentData).flatMap(
       ([_, students]) =>
         students.map((student) => ({
@@ -81,9 +88,11 @@ const Page = () => {
         { records: formattedRecords },
         { withCredentials: true }
       );
+      setdisableSubmitButton(false);
       router.push("/attendance-records");
     } catch (err) {
       // console.error("❌ Error saving attendance:", err);
+      setdisableSubmitButton(false);
       alert("❌ Failed to save attendance.");
     }
   };
@@ -174,6 +183,7 @@ const Page = () => {
 
       <button
         id="saveBtn"
+        disabled={disableSubmitButton}
         onClick={async () => {
           const confirmSave = window.confirm(
             "Do you want to save the attendance?"
@@ -183,7 +193,16 @@ const Page = () => {
           }
         }}
       >
-        ✅ Save Attendance
+        {disableSubmitButton ? (
+          <div className="flex gap-3">
+            <div className="h-7 w-7 border-4 border-t-green-500 border-b-white rounded-full animate-spin"></div>
+            <h1 className="cursor-not-allowed font-semibold">
+              Saving Attendance...
+            </h1>
+          </div>
+        ) : (
+          <h1 className="font-semibold">✅ Save Attendance</h1>
+        )}
       </button>
 
       <div id="summary">

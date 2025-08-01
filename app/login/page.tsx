@@ -73,7 +73,7 @@ const LoginPage = () => {
           Sacred Heart Hostel
         </h2>
         <p className="text-sm text-black text-center mb-6">
-          E - Attendance Login
+          St. Joseph's College, Trichy
         </p>
 
         <form onSubmit={handleSubmit} className="space-y-5 font-mono">

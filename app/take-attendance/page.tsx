@@ -80,7 +80,7 @@ const Page = () => {
           roomNo: student.roomNo,
           accountNumber: student.accNo,
           name: student.name,
-          status: statusMap[student.accNo] || "absent",
+          status: statusMap[student.accNo] || "present",
         }))
     );
 
@@ -171,11 +171,10 @@ const Page = () => {
                       </div>
                       <div className="status-buttons">
                         <button
-                          className={`status-btn present ${
-                            statusMap[student.accNo] === "present"
+                          className={`status-btn present ${statusMap[student.accNo] === "present"
                               ? "active"
                               : ""
-                          }`}
+                            }`}
                           onClick={() =>
                             handleStatusChange(
                               student.accNo.toString(),
@@ -186,11 +185,10 @@ const Page = () => {
                           P
                         </button>
                         <button
-                          className={`status-btn absent ${
-                            statusMap[student.accNo] === "absent"
+                          className={`status-btn absent ${statusMap[student.accNo] === "absent"
                               ? "active"
                               : ""
-                          }`}
+                            }`}
                           onClick={() =>
                             handleStatusChange(
                               student.accNo.toString(),

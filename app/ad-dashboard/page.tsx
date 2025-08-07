@@ -21,17 +21,30 @@ const AdDashboard = () => {
       try {
         const response = await axios.get(
           `${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}/api/auth/authenticate`,
-          { withCredentials: true }
+          {
+            withCredentials: true,
+            headers: {
+              "Cache-Control": "no-store",
+              Pragma: "no-cache",
+              Expires: "0",
+            },
+          }
         );
         // is user is not logged in we are redirecting to login
         const isLoggedIn = response.data.isLoggedIn;
         // console.log(isLoggedIn);
 
         if (isLoggedIn) {
-
           const res = await axios.get(
             `${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}/api/auth/me`,
-            { withCredentials: true }
+            {
+              withCredentials: true,
+              headers: {
+                "Cache-Control": "no-store",
+                Pragma: "no-cache",
+                Expires: "0",
+              },
+            }
           );
           if (res.data?.username) {
             setAdName(res.data.username);
@@ -175,16 +188,6 @@ const AdDashboard = () => {
                 )}
               </button>
             </div>
-
-            {/* Logout Button */}
-            {/* <button
-          onClick={() => router.push("/logout")}
-          className="scale-90 mt-4 px-5 py-2 rounded-full font-semibold border-2  shadow transition-transform duration-200 transform
-    bg-white  hover:border-black hover:bg-white hover:text-black hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2
-    dark:bg-black dark:text-white dark:border-white dark:hover:scale-105"
-        >
-          Logout
-        </button> */}
             <Logout />
           </div>
         </div>

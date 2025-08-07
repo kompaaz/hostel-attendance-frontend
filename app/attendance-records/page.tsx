@@ -26,7 +26,14 @@ const Page = () => {
     try {
       const response = await axios.get(
         `${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}/api/attendance/get-attendance-records`,
-        { withCredentials: true }
+        {
+          withCredentials: true,
+          headers: {
+            "Cache-Control": "no-store",
+            Pragma: "no-cache",
+            Expires: "0",
+          },
+        }
       );
 
       setAttendanceGroups(response.data["attendance-records"]);

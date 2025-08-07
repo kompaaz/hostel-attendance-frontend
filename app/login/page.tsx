@@ -18,7 +18,14 @@ const LoginPage = () => {
       try {
         const response = await axios.get(
           `${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}/api/auth/authenticate`,
-          { withCredentials: true }
+          {
+            withCredentials: true,
+            headers: {
+              "Cache-Control": "no-store",
+              Pragma: "no-cache",
+              Expires: "0",
+            },
+          }
         );
         const isLoggedIn = response.data.isLoggedIn;
         if (!isLoggedIn) {
@@ -43,6 +50,9 @@ const LoginPage = () => {
         {
           headers: {
             "Content-Type": "application/json",
+            "Cache-Control": "no-store",
+            Pragma: "no-cache",
+            Expires: "0",
           },
           withCredentials: true,
         }

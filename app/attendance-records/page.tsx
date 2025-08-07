@@ -39,8 +39,8 @@ const Page = () => {
   }, []);
 
   return (
-    <main className="min-h-screen bg-gray-50 px-4 md:px-6 py-8 font-sans">
-      <div className="container mx-auto max-w-5xl">
+    <div className="min-h-screen bg-gray-50 px-4 md:px-6 py-8 font-sans">
+      <div className="flex flex-col items-center">
         <div className="flex flex-col sm:flex-row items-center justify-center sm:justify-start gap-4 mb-8">
           <img
             src="/logo.png"
@@ -62,8 +62,8 @@ const Page = () => {
         >
           🔙 Back to Dashboard
         </button>
-        <div className="w-[90vw] ">
-        {/* <div className="grid gap-6 md:gap-8 bg-green-500"> */}
+        <div className="w-[90vw] space-y-10">
+          {/* <div className="grid gap-6 md:gap-8 bg-green-500"> */}
           {attendanceGroups.map((group) => (
             <div
               key={group._id}
@@ -135,13 +135,7 @@ const Page = () => {
           ))}
         </div>
       </div>
-      <Link
-        href="/logout"
-        className="mt-8 inline-block text-blue-600 hover:underline"
-      >
-        <button>Logout</button>
-      </Link>
-    </main>
+    </div>
   );
 };
 

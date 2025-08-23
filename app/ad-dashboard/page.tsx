@@ -23,9 +23,18 @@ const AdDashboard = () => {
           `${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}/api/auth/authenticate`,
           { withCredentials: true }
         );
+
+        const role = response.data.role;
+        console.log(role);
+
+        if (role == "student") {
+          router.push("/student/dashboard");
+        }
+
         // is user is not logged in we are redirecting to login
         const isLoggedIn = response.data.isLoggedIn;
         // console.log(isLoggedIn);
+        console.log(response);
 
         if (isLoggedIn) {
 
@@ -137,11 +146,10 @@ const AdDashboard = () => {
                   router.push("/take-attendance");
                 }}
                 disabled={isTakingAttendance}
-                className={`w-full py-2 scale-90 rounded-lg border bg-black border-black text-white font-semibold transition transform duration-200 ${
-                  isTakingAttendance
-                    ? "opacity-50 cursor-not-allowed"
-                    : "hover:bg-white hover:text-black hover:scale-105"
-                }`}
+                className={`w-full py-2 scale-90 rounded-lg border bg-black border-black text-white font-semibold transition transform duration-200 ${isTakingAttendance
+                  ? "opacity-50 cursor-not-allowed"
+                  : "hover:bg-white hover:text-black hover:scale-105"
+                  }`}
               >
                 {isTakingAttendance ? (
                   <span className="flex justify-center items-center gap-2">
@@ -159,11 +167,10 @@ const AdDashboard = () => {
                   router.push("/attendance-records");
                 }}
                 disabled={isViewingRecords}
-                className={`w-full scale-90 py-2 rounded-lg border bg-black border-black text-white font-semibold transition transform duration-200 ${
-                  isViewingRecords
-                    ? "opacity-50 cursor-not-allowed"
-                    : "hover:bg-white hover:text-black hover:scale-105"
-                }`}
+                className={`w-full scale-90 py-2 rounded-lg border bg-black border-black text-white font-semibold transition transform duration-200 ${isViewingRecords
+                  ? "opacity-50 cursor-not-allowed"
+                  : "hover:bg-white hover:text-black hover:scale-105"
+                  }`}
               >
                 {isViewingRecords ? (
                   <span className="flex justify-center items-center gap-2">

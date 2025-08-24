@@ -90,11 +90,11 @@ const AdDashboard = () => {
     // 🧠 Greeting logic
     const getGreeting = () => {
         const hour = currentTime.getHours();
-        if (hour < 6) return "🌙 Good Night";
-        if (hour < 12) return "🌞 Good Morning";
-        if (hour < 18) return "🌤️ Good Afternoon";
-        if (hour < 21) return "🌆 Good Evening";
-        return "🌙 Good Night";
+        if (hour < 6) return "Good Night";
+        if (hour < 12) return "Good Morning";
+        if (hour < 18) return "Good Afternoon";
+        if (hour < 21) return "Good Evening";
+        return "Good Night";
     };
 
     return (
@@ -122,7 +122,7 @@ const AdDashboard = () => {
 
                         {/* Personalized Greeting */}
                         <h2 className="text-lg sm:text-2xl text-center w-full md:text-2xl font-bold text-black mb-1">
-                            {getGreeting()},{adName} 🎉
+                            {getGreeting()},{adName}
                         </h2>
 
                         {/* Live Time */}
@@ -184,7 +184,7 @@ const AdDashboard = () => {
                             <button
                                 onClick={() => {
                                     setIsViewingRecords(true);
-                                    router.push("/attendance-records");
+                                    router.push("/director/attendance-records");
                                 }}
                                 disabled={isViewingRecords}
                                 className={`w-full scale-90 py-2 rounded-lg border bg-black border-black text-white font-semibold transition transform duration-200 ${isViewingRecords

@@ -10,6 +10,7 @@ type Student = {
   dNo: string;
   accNo: number;
   roomNo: string;
+  leave?: boolean; // ✅ NEW
 };
 
 type StudentData = {
@@ -23,36 +24,28 @@ const Page = () => {
   const [studentData, setStudentData] = useState<StudentData>({});
   const [loadingCircle, setloadingCircle] = useState(true);
 
-  const getStudentData = useEffect(() => {
+  useEffect(() => {
     (async () => {
       try {
         const response = await axios.get(
           `${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}/api/auth/authenticate`,
           { withCredentials: true }
         );
-        // is user is not logged in we are redirecting to login
         const isLoggedIn = response.data.isLoggedIn;
         if (isLoggedIn) {
           const response = await axios.get(
             `${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}/api/attendance`,
-            {
-              withCredentials: true,
-            }
+            { withCredentials: true }
           );
+          console.log(response)
           const grouped = response.data?.students;
-          if (grouped && typeof grouped === "object") {
-            setStudentData(grouped);
-          } else {
-            // console.warn("❗Invalid student data received:", grouped);
-            setStudentData({}); // prevent crash
-          }
+          setStudentData(grouped && typeof grouped === "object" ? grouped : {});
           setloadingCircle(false);
           return;
         }
         router.push("/login");
       } catch (error) {
-        // console.error("❌ Error fetching student data:", error);
-        setStudentData({}); // prevent crash
+        setStudentData({});
       }
     })();
   }, []);
@@ -76,23 +69,24 @@ const Page = () => {
   const handleSave = async () => {
     const formattedRecords = Object.entries(studentData).flatMap(
       ([_, students]) =>
-        students.map((student) => ({
-          roomNo: student.roomNo,
-          accountNumber: student.accNo,
-          name: student.name,
-          status: statusMap[student.accNo] || "present",
-        }))
+        students
+          .filter((student) => !student.leave) // ✅ skip leave students
+          .map((student) => ({
+            roomNo: student.roomNo,
+            accountNumber: student.accNo,
+            name: student.name,
+            status: statusMap[student.accNo] || "present",
+          }))
     );
 
     try {
-      const res = await axios.post(
+      await axios.post(
         `${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}/api/attendance/mark`,
         { records: formattedRecords },
         { withCredentials: true }
       );
       router.push("/attendance-records");
     } catch (err) {
-      // console.error("❌ Error saving attendance:", err);
       alert("❌ Failed to save attendance.");
     }
   };
@@ -103,16 +97,11 @@ const Page = () => {
     const handleBeforeUnload = (e: BeforeUnloadEvent) => {
       if (Object.keys(statusMap).length > 0) {
         e.preventDefault();
-        e.returnValue = ""; // Required for Chrome to show prompt
-        // You cannot use alert() here — it will be blocked
+        e.returnValue = "";
       }
     };
-
     window.addEventListener("beforeunload", handleBeforeUnload);
-
-    return () => {
-      window.removeEventListener("beforeunload", handleBeforeUnload);
-    };
+    return () => window.removeEventListener("beforeunload", handleBeforeUnload);
   }, [statusMap]);
 
   return (
@@ -128,7 +117,6 @@ const Page = () => {
         </div>
       ) : (
         <>
-          {" "}
           <header className="mb-5">
             <div className="header-left">
               <img src="/logo.png" alt="Logo" />
@@ -161,44 +149,56 @@ const Page = () => {
                 <div className="student-list">
                   {students.map((student) => (
                     <div
-                      className="student-card"
+                      className={`student-card ${student.leave ? "opacity-60 bg-gray-200" : ""
+                        }`} // ✅ style leave differently
                       key={student.accNo}
                       data-name={student.name}
                       data-acc={student.accNo}
                     >
                       <div className="student-name">
-                        {student.name} ({student.dNo})
+                        {student.name} ({student.dNo}){" "}
+                        {student.leave && (
+                          ""
+                        )}
                       </div>
-                      <div className="status-buttons">
-                        <button
-                          className={`status-btn present ${statusMap[student.accNo] === "present"
+                      {!student.leave ? ( // ✅ no buttons for leave students
+                        <div className="status-buttons">
+                          <button
+                            className={`status-btn present ${statusMap[student.accNo] === "present"
                               ? "active"
                               : ""
-                            }`}
-                          onClick={() =>
-                            handleStatusChange(
-                              student.accNo.toString(),
-                              "present"
-                            )
-                          }
-                        >
-                          P
-                        </button>
-                        <button
-                          className={`status-btn absent ${statusMap[student.accNo] === "absent"
+                              }`}
+                            onClick={() =>
+                              handleStatusChange(
+                                student.accNo.toString(),
+                                "present"
+                              )
+                            }
+                          >
+                            P
+                          </button>
+                          <button
+                            className={`status-btn absent ${statusMap[student.accNo] === "absent"
                               ? "active"
                               : ""
-                            }`}
-                          onClick={() =>
-                            handleStatusChange(
-                              student.accNo.toString(),
-                              "absent"
-                            )
-                          }
-                        >
-                          A
-                        </button>
-                      </div>
+                              }`}
+                            onClick={() =>
+                              handleStatusChange(
+                                student.accNo.toString(),
+                                "absent"
+                              )
+                            }
+                          >
+                            A
+                          </button>
+                        </div>
+                      ) : (<span className="text-red-500 font-bold">
+                        [On Leave]
+                      </span>)
+                        // : (
+                        //   <div className="text-gray-500 italic">Leave</div>
+                        // )
+                      }
                     </div>
                   ))}
                 </div>

@@ -52,7 +52,7 @@ const LoginPage = () => {
 
       // Redirect based on role
       if (userRole === "director") {
-        router.push("/attendance-records");
+        router.push("/director/dashboard");
       } else if (userRole === "student") {
         router.push("/student/dashboard");
       } else if (userRole === "ad") {
@@ -162,9 +162,8 @@ const LoginPage = () => {
               <button
                 type="submit"
                 disabled={loading}
-                className={`w-full py-2 rounded-lg bg-black text-white font-semibold transition hover:bg-gray-900 ${
-                  loading ? "opacity-50 cursor-not-allowed" : ""
-                }`}
+                className={`w-full py-2 rounded-lg bg-black text-white font-semibold transition hover:bg-gray-900 ${loading ? "opacity-50 cursor-not-allowed" : ""
+                  }`}
               >
                 {loading ? "Logging in..." : "Login"}
               </button>

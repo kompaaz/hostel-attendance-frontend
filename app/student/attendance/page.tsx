@@ -65,7 +65,7 @@ const StudentAttendance = () => {
             <div className="w-full max-w-2xl bg-white rounded-2xl shadow-xl p-8 font-mono text-center space-y-6">
                 {/* Title */}
                 <h2 className="text-2xl md:text-3xl font-bold text-center text-black mb-1 font-mono">
-                    📊 Attendance Record
+                    Attendance Record
                 </h2>
                 <p className="text-sm text-black text-center mb-6">
                     {student?.name} ({student?.dNo})
@@ -93,7 +93,7 @@ const StudentAttendance = () => {
                                                 : "text-red-600"
                                                 }`}
                                         >
-                                            {record.status === "present" ? "✅ Present" : "❌ Absent"}
+                                            {record.status === "present" ? "Present" : "Absent"}
                                         </td>
                                     </tr>
                                 ))

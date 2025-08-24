@@ -118,6 +118,13 @@ const StudentDashboard = () => {
                             >
                                 📝 Internal Marks
                             </button> */}
+                            <button
+                                onClick={() => router.push("/student/leave")}
+                                className="w-full py-2 rounded-lg bg-black text-white font-semibold transition hover:bg-white hover:text-black hover:scale-105 border border-black transform duration-200"
+                            >
+                                📅 Leave Request
+                            </button>
+
 
                             <button
                                 onClick={() => router.push("/student/profile")}

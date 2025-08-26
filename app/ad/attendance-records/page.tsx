@@ -57,7 +57,7 @@ const Page = () => {
           </div>
         </div>
         <button
-          onClick={() => router.push("/ad-dashboard")}
+          onClick={() => router.push("/ad/dashboard")}
           className="mb-4 px-4 py-2 rounded-lg border font-mono border-black bg-white text-black font-semibold transition hover:scale-105"
         >
           🔙 Back to Dashboard
@@ -101,11 +101,10 @@ const Page = () => {
                     {group.records.map((record, index) => (
                       <tr
                         key={record._id}
-                        className={`transition ${
-                          record.status.toLowerCase() === "present"
-                            ? "bg-green-50 hover:bg-green-100"
-                            : "bg-red-50 hover:bg-red-100"
-                        }`}
+                        className={`transition ${record.status.toLowerCase() === "present"
+                          ? "bg-green-50 hover:bg-green-100"
+                          : "bg-red-50 hover:bg-red-100"
+                          }`}
                       >
                         <td className="px-2 sm:px-4 py-2">{index + 1}</td>
                         <td className="px-2 sm:px-4 py-2 font-medium">
@@ -117,11 +116,10 @@ const Page = () => {
                         </td>
                         <td className="px-2 sm:px-4 py-2">
                           <span
-                            className={`px-2 py-1 sm:px-3 rounded-full text-[10px] sm:text-xs font-semibold ${
-                              record.status.toLowerCase() === "present"
-                                ? "bg-green-200 text-green-800"
-                                : "bg-red-200 text-red-800"
-                            }`}
+                            className={`px-2 py-1 sm:px-3 rounded-full text-[10px] sm:text-xs font-semibold ${record.status.toLowerCase() === "present"
+                              ? "bg-green-200 text-green-800"
+                              : "bg-red-200 text-red-800"
+                              }`}
                           >
                             {record.status.toUpperCase()}
                           </span>

@@ -2,7 +2,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
-import Logout from "../components/Logout";
+import Logout from "../../components/Logout";
 
 const AdDashboard = () => {
   const [adName, setAdName] = useState("AD");

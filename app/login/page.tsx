@@ -56,7 +56,7 @@ const LoginPage = () => {
       } else if (userRole === "student") {
         router.push("/student/dashboard");
       } else if (userRole === "ad") {
-        router.push("/ad-dashboard");
+        router.push("/ad/dashboard");
       } else {
         setError("❌ Unknown role. Contact support.");
       }

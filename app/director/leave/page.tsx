@@ -14,6 +14,7 @@ interface LeaveRequest {
     student?: {
         name: string;
         accNo: string;
+        dNo: string;
         roomNo: string;
     };
 }
@@ -198,6 +199,7 @@ const DirectorLeave = () => {
                                         <p className="text-sm text-gray-600">
                                             {req.student?.accNo && `Acc: ${req.student.accNo}`}
                                             {req.student?.roomNo && ` • Room: ${req.student.roomNo}`}
+                                            {req.student?.dNo && ` • Room: ${req.student.dNo}`}
                                         </p>
                                     </div>
                                     <div className="flex items-center gap-2">

@@ -21,10 +21,20 @@ const LoginPage = () => {
           { withCredentials: true }
         );
         const isLoggedIn = response.data.isLoggedIn;
+        const userRole = response.data.role;
+
         if (!isLoggedIn) {
           return setcheckingUserStatus(false);
         }
-        router.push("/ad-dashboard");
+        if (userRole === "director") {
+          router.push("/director/dashboard");
+        } else if (userRole === "student") {
+          router.push("/student/dashboard");
+        } else if (userRole === "ad") {
+          router.push("/ad/dashboard");
+        } else {
+          setError("❌ Unknown role. Contact support.");
+        }
       } catch (error) {
         // console.log("Error in isUserLoggedIn \n" + error);
       }

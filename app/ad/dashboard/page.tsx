@@ -143,7 +143,7 @@ const AdDashboard = () => {
               <button
                 onClick={() => {
                   setIsTakingAttendance(true);
-                  router.push("/take-attendance");
+                  router.push("/ad/take-attendance");
                 }}
                 disabled={isTakingAttendance}
                 className={`w-full py-2 scale-90 rounded-lg border bg-black border-black text-white font-semibold transition transform duration-200 ${isTakingAttendance
@@ -164,7 +164,7 @@ const AdDashboard = () => {
               <button
                 onClick={() => {
                   setIsViewingRecords(true);
-                  router.push("/attendance-records");
+                  router.push("/ad/attendance-records");
                 }}
                 disabled={isViewingRecords}
                 className={`w-full scale-90 py-2 rounded-lg border bg-black border-black text-white font-semibold transition transform duration-200 ${isViewingRecords
@@ -192,7 +192,12 @@ const AdDashboard = () => {
         >
           Logout
         </button> */}
-            <Logout />
+            <button
+              onClick={() => router.push("/logout")}
+              className="px-6 py-2 bg-black text-white font-semibold rounded-full shadow-md hover:bg-white hover:text-black hover:border hover:border-black transition duration-200"
+            >
+              Logout
+            </button>
           </div>
         </div>
       )}

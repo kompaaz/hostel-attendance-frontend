@@ -135,7 +135,13 @@ const StudentDashboard = () => {
                         </div>
 
                         {/* Logout */}
-                        <Logout />
+                        <button
+                            onClick={() => router.push("/logout")}
+                            className="px-6 py-2 bg-black text-white font-semibold rounded-full shadow-md hover:bg-white hover:text-black hover:border hover:border-black transition duration-200"
+                        >
+                            Logout
+                        </button>
+
                     </div>
                 </div>
             )}

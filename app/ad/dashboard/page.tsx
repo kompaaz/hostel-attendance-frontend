@@ -10,6 +10,7 @@ const AdDashboard = () => {
   const [isTakingAttendance, setIsTakingAttendance] = useState(false);
   const [hasMounted, setHasMounted] = useState(false);
   const [isViewingRecords, setIsViewingRecords] = useState(false);
+  const [isViewingAnalytics, setIsViewingAnalytics] = useState(false);
   const router = useRouter();
   const [loadingCircle, setloadingCircle] = useState(true);
   const isAuthenticated = useRef(false);
@@ -160,7 +161,26 @@ const AdDashboard = () => {
                   "📋 Take Attendance"
                 )}
               </button>
-
+              <button
+                onClick={() => {
+                  setIsViewingAnalytics(true);
+                  router.push("/ad/analytics");
+                }}
+                disabled={isViewingAnalytics}
+                className={`w-full scale-90 py-2 rounded-lg border bg-black border-black text-white font-semibold transition transform duration-200 ${isViewingAnalytics
+                  ? "opacity-50 cursor-not-allowed"
+                  : "hover:bg-white hover:text-black hover:scale-105"
+                  }`}
+              >
+                {isViewingAnalytics ? (
+                  <span className="flex justify-center items-center gap-2">
+                    <span className="h-4 w-4 animate-spin border-2 border-black border-t-transparent rounded-full" />
+                    Redirecting...
+                  </span>
+                ) : (
+                  "📑 Attendance Analytics"
+                )}
+              </button>
               <button
                 onClick={() => {
                   setIsViewingRecords(true);

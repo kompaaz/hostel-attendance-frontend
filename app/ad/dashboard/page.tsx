@@ -2,7 +2,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
-import Logout from "../components/Logout";
+import Logout from "../../components/Logout";
 
 const AdDashboard = () => {
   const [adName, setAdName] = useState("AD");
@@ -10,6 +10,7 @@ const AdDashboard = () => {
   const [isTakingAttendance, setIsTakingAttendance] = useState(false);
   const [hasMounted, setHasMounted] = useState(false);
   const [isViewingRecords, setIsViewingRecords] = useState(false);
+  const [isViewingAnalytics, setIsViewingAnalytics] = useState(false);
   const router = useRouter();
   const [loadingCircle, setloadingCircle] = useState(true);
   const isAuthenticated = useRef(false);
@@ -23,9 +24,18 @@ const AdDashboard = () => {
           `${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}/api/auth/authenticate`,
           { withCredentials: true }
         );
+
+        const role = response.data.role;
+        console.log(role);
+
+        if (role == "student") {
+          router.push("/student/dashboard");
+        }
+
         // is user is not logged in we are redirecting to login
         const isLoggedIn = response.data.isLoggedIn;
         // console.log(isLoggedIn);
+        console.log(response);
 
         if (isLoggedIn) {
 
@@ -134,14 +144,13 @@ const AdDashboard = () => {
               <button
                 onClick={() => {
                   setIsTakingAttendance(true);
-                  router.push("/take-attendance");
+                  router.push("/ad/take-attendance");
                 }}
                 disabled={isTakingAttendance}
-                className={`w-full py-2 scale-90 rounded-lg border bg-black border-black text-white font-semibold transition transform duration-200 ${
-                  isTakingAttendance
-                    ? "opacity-50 cursor-not-allowed"
-                    : "hover:bg-white hover:text-black hover:scale-105"
-                }`}
+                className={`w-full py-2 scale-90 rounded-lg border bg-black border-black text-white font-semibold transition transform duration-200 ${isTakingAttendance
+                  ? "opacity-50 cursor-not-allowed"
+                  : "hover:bg-white hover:text-black hover:scale-105"
+                  }`}
               >
                 {isTakingAttendance ? (
                   <span className="flex justify-center items-center gap-2">
@@ -152,18 +161,36 @@ const AdDashboard = () => {
                   "📋 Take Attendance"
                 )}
               </button>
-
+              <button
+                onClick={() => {
+                  setIsViewingAnalytics(true);
+                  router.push("/ad/analytics");
+                }}
+                disabled={isViewingAnalytics}
+                className={`w-full scale-90 py-2 rounded-lg border bg-black border-black text-white font-semibold transition transform duration-200 ${isViewingAnalytics
+                  ? "opacity-50 cursor-not-allowed"
+                  : "hover:bg-white hover:text-black hover:scale-105"
+                  }`}
+              >
+                {isViewingAnalytics ? (
+                  <span className="flex justify-center items-center gap-2">
+                    <span className="h-4 w-4 animate-spin border-2 border-black border-t-transparent rounded-full" />
+                    Redirecting...
+                  </span>
+                ) : (
+                  "📑 Attendance Analytics"
+                )}
+              </button>
               <button
                 onClick={() => {
                   setIsViewingRecords(true);
-                  router.push("/attendance-records");
+                  router.push("/ad/attendance-records");
                 }}
                 disabled={isViewingRecords}
-                className={`w-full scale-90 py-2 rounded-lg border bg-black border-black text-white font-semibold transition transform duration-200 ${
-                  isViewingRecords
-                    ? "opacity-50 cursor-not-allowed"
-                    : "hover:bg-white hover:text-black hover:scale-105"
-                }`}
+                className={`w-full scale-90 py-2 rounded-lg border bg-black border-black text-white font-semibold transition transform duration-200 ${isViewingRecords
+                  ? "opacity-50 cursor-not-allowed"
+                  : "hover:bg-white hover:text-black hover:scale-105"
+                  }`}
               >
                 {isViewingRecords ? (
                   <span className="flex justify-center items-center gap-2">
@@ -185,7 +212,12 @@ const AdDashboard = () => {
         >
           Logout
         </button> */}
-            <Logout />
+            <button
+              onClick={() => router.push("/logout")}
+              className="px-6 py-2 bg-black text-white font-semibold rounded-full shadow-md hover:bg-white hover:text-black hover:border hover:border-black transition duration-200"
+            >
+              Logout
+            </button>
           </div>
         </div>
       )}

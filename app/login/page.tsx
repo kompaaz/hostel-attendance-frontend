@@ -21,10 +21,20 @@ const LoginPage = () => {
           { withCredentials: true }
         );
         const isLoggedIn = response.data.isLoggedIn;
+        const userRole = response.data.role;
+
         if (!isLoggedIn) {
           return setcheckingUserStatus(false);
         }
-        router.push("/ad-dashboard");
+        if (userRole === "director") {
+          router.push("/director/dashboard");
+        } else if (userRole === "student") {
+          router.push("/student/dashboard");
+        } else if (userRole === "ad") {
+          router.push("/ad/dashboard");
+        } else {
+          setError("❌ Unknown role. Contact support.");
+        }
       } catch (error) {
         // console.log("Error in isUserLoggedIn \n" + error);
       }
@@ -52,11 +62,11 @@ const LoginPage = () => {
 
       // Redirect based on role
       if (userRole === "director") {
-        router.push("/attendance-records");
+        router.push("/director/dashboard");
       } else if (userRole === "student") {
         router.push("/student/dashboard");
       } else if (userRole === "ad") {
-        router.push("/ad-dashboard");
+        router.push("/ad/dashboard");
       } else {
         setError("❌ Unknown role. Contact support.");
       }
@@ -162,9 +172,8 @@ const LoginPage = () => {
               <button
                 type="submit"
                 disabled={loading}
-                className={`w-full py-2 rounded-lg bg-black text-white font-semibold transition hover:bg-gray-900 ${
-                  loading ? "opacity-50 cursor-not-allowed" : ""
-                }`}
+                className={`w-full py-2 rounded-lg bg-black text-white font-semibold transition hover:bg-gray-900 ${loading ? "opacity-50 cursor-not-allowed" : ""
+                  }`}
               >
                 {loading ? "Logging in..." : "Login"}
               </button>

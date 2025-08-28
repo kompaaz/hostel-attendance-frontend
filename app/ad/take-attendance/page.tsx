@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import "../styles/attendance.css";
+import "../../styles/attendance.css";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 
@@ -10,7 +10,10 @@ type Student = {
   dNo: string;
   accNo: number;
   roomNo: string;
+  leave?: boolean; // true if on leave
+  status?: "present" | "absent" | "leave"; // frontend-only
 };
+
 
 type StudentData = {
   [room: string]: Student[];
@@ -22,37 +25,30 @@ const Page = () => {
   const [datetime, setDatetime] = useState<Date | null>(null);
   const [studentData, setStudentData] = useState<StudentData>({});
   const [loadingCircle, setloadingCircle] = useState(true);
+  const [saving, setSaving] = useState(false);
 
-  const getStudentData = useEffect(() => {
+  useEffect(() => {
     (async () => {
       try {
         const response = await axios.get(
           `${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}/api/auth/authenticate`,
           { withCredentials: true }
         );
-        // is user is not logged in we are redirecting to login
         const isLoggedIn = response.data.isLoggedIn;
         if (isLoggedIn) {
           const response = await axios.get(
             `${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}/api/attendance`,
-            {
-              withCredentials: true,
-            }
+            { withCredentials: true }
           );
+          console.log(response)
           const grouped = response.data?.students;
-          if (grouped && typeof grouped === "object") {
-            setStudentData(grouped);
-          } else {
-            // console.warn("❗Invalid student data received:", grouped);
-            setStudentData({}); // prevent crash
-          }
+          setStudentData(grouped && typeof grouped === "object" ? grouped : {});
           setloadingCircle(false);
           return;
         }
         router.push("/login");
       } catch (error) {
-        // console.error("❌ Error fetching student data:", error);
-        setStudentData({}); // prevent crash
+        setStudentData({});
       }
     })();
   }, []);
@@ -66,53 +62,64 @@ const Page = () => {
     setStatusMap((prev) => ({ ...prev, [accNo]: status }));
   };
 
+
   const getSummary = () => {
-    const values = Object.values(statusMap);
-    const present = values.filter((v) => v === "present").length;
-    const absent = values.filter((v) => v === "absent").length;
-    return { present, absent };
+    let present = 0, absent = 0, leave = 0;
+
+    Object.values(studentData).forEach((students) => {
+      students.forEach((student) => {
+        const status = student.leave ? "leave" : statusMap[student.accNo];
+        if (status === "leave") leave++;
+        else if (status === "absent") absent++;
+        else if (status === "present") present++;
+      });
+    });
+
+    return { present, absent, leave };
   };
 
+
+  const { present, absent, leave } = getSummary();
+
+
   const handleSave = async () => {
-    const formattedRecords = Object.entries(studentData).flatMap(
-      ([_, students]) =>
-        students.map((student) => ({
-          roomNo: student.roomNo,
-          accountNumber: student.accNo,
-          name: student.name,
-          status: statusMap[student.accNo] || "present",
-        }))
+    if (saving) return; // prevent double calls
+    setSaving(true);
+
+    const formattedRecords = Object.entries(studentData).flatMap(([_, students]) =>
+      students.map((student) => ({
+        roomNo: student.roomNo,
+        accountNumber: student.accNo,
+        name: student.name,
+        status: student.leave ? "leave" : statusMap[student.accNo] || "present",
+      }))
     );
 
     try {
-      const res = await axios.post(
+      await axios.post(
         `${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}/api/attendance/mark`,
         { records: formattedRecords },
         { withCredentials: true }
       );
-      router.push("/attendance-records");
-    } catch (err) {
-      // console.error("❌ Error saving attendance:", err);
-      alert("❌ Failed to save attendance.");
+      router.push("/ad/attendance-records");
+    } catch (err: any) {
+      const message = err.response?.data?.error || "❌ Failed to save attendance.";
+      alert(message);
+      setSaving(false); // re-enable if failed
     }
   };
 
-  const { present, absent } = getSummary();
+
 
   useEffect(() => {
     const handleBeforeUnload = (e: BeforeUnloadEvent) => {
       if (Object.keys(statusMap).length > 0) {
         e.preventDefault();
-        e.returnValue = ""; // Required for Chrome to show prompt
-        // You cannot use alert() here — it will be blocked
+        e.returnValue = "";
       }
     };
-
     window.addEventListener("beforeunload", handleBeforeUnload);
-
-    return () => {
-      window.removeEventListener("beforeunload", handleBeforeUnload);
-    };
+    return () => window.removeEventListener("beforeunload", handleBeforeUnload);
   }, [statusMap]);
 
   return (
@@ -128,7 +135,6 @@ const Page = () => {
         </div>
       ) : (
         <>
-          {" "}
           <header className="mb-5">
             <div className="header-left">
               <img src="/logo.png" alt="Logo" />
@@ -149,7 +155,7 @@ const Page = () => {
             </div>
           </header>
           <button
-            onClick={() => router.push("/ad-dashboard")}
+            onClick={() => router.push("/ad/dashboard")}
             className="mb-4 px-4 py-2 rounded-lg border font-mono border-black bg-white text-black font-semibold transition hover:scale-105"
           >
             🔙 Back to Dashboard
@@ -161,65 +167,56 @@ const Page = () => {
                 <div className="student-list">
                   {students.map((student) => (
                     <div
-                      className="student-card"
+                      className={`student-card ${student.leave ? "opacity-60 bg-gray-200" : ""}`}
                       key={student.accNo}
-                      data-name={student.name}
-                      data-acc={student.accNo}
                     >
                       <div className="student-name">
-                        {student.name} ({student.dNo})
+                        {student.name} ({student.dNo}){" "}
+                        {student.leave && <span className="text-red-500 font-bold">[On Leave]</span>}
                       </div>
-                      <div className="status-buttons">
-                        <button
-                          className={`status-btn present ${statusMap[student.accNo] === "present"
-                              ? "active"
-                              : ""
-                            }`}
-                          onClick={() =>
-                            handleStatusChange(
-                              student.accNo.toString(),
-                              "present"
-                            )
-                          }
-                        >
-                          P
-                        </button>
-                        <button
-                          className={`status-btn absent ${statusMap[student.accNo] === "absent"
-                              ? "active"
-                              : ""
-                            }`}
-                          onClick={() =>
-                            handleStatusChange(
-                              student.accNo.toString(),
-                              "absent"
-                            )
-                          }
-                        >
-                          A
-                        </button>
-                      </div>
+
+                      {!student.leave && (
+                        <div className="status-buttons">
+                          <button
+                            className={`status-btn present ${statusMap[student.accNo] === "present" ? "active" : ""}`}
+                            onClick={() => handleStatusChange(student.accNo.toString(), "present")}
+                          >
+                            P
+                          </button>
+                          <button
+                            className={`status-btn absent ${statusMap[student.accNo] === "absent" ? "active" : ""}`}
+                            onClick={() => handleStatusChange(student.accNo.toString(), "absent")}
+                          >
+                            A
+                          </button>
+                        </div>
+                      )}
                     </div>
                   ))}
+
                 </div>
               </div>
             ))}
           </div>
           <button
             id="saveBtn"
+            disabled={saving}
+            className={`px-4 py-2 rounded-lg font-semibold ${saving ? "bg-gray-400 cursor-not-allowed" : "bg-green-500 hover:scale-105"
+              }`}
             onClick={async () => {
-              const confirmSave = window.confirm(
-                "Do you want to save the attendance?"
-              );
+              const confirmSave = window.confirm("Do you want to save the attendance?");
               if (confirmSave) {
                 await handleSave();
               }
             }}
           >
-            ✅ Save Attendance
+            {saving ? "⏳ Saving..." : "✅ Save Attendance"}
           </button>
+
+
+
           <div id="summary">
-            Total Present: {present} | Total Absent: {absent}
+            Total Present: {present} | Total Absent: {absent} | Total Leave: {leave}
           </div>
         </>
       )}

@@ -15,6 +15,9 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Sacred Heart Hostel",
   description: "e-Attendance System for Sacred Heart Hostel",
+  icons: {
+    icon: "/favicon.ico"
+  },
 };
 
 export default function RootLayout({

@@ -25,6 +25,7 @@ const Page = () => {
   const [datetime, setDatetime] = useState<Date | null>(null);
   const [studentData, setStudentData] = useState<StudentData>({});
   const [loadingCircle, setloadingCircle] = useState(true);
+  const [saving, setSaving] = useState(false);
 
   useEffect(() => {
     (async () => {
@@ -82,6 +83,9 @@ const Page = () => {
 
 
   const handleSave = async () => {
+    if (saving) return; // prevent double calls
+    setSaving(true);
+
     const formattedRecords = Object.entries(studentData).flatMap(([_, students]) =>
       students.map((student) => ({
         roomNo: student.roomNo,
@@ -98,8 +102,10 @@ const Page = () => {
         { withCredentials: true }
       );
       router.push("/ad/attendance-records");
-    } catch (err) {
-      alert("❌ Failed to save attendance.");
+    } catch (err: any) {
+      const message = err.response?.data?.error || "❌ Failed to save attendance.";
+      alert(message);
+      setSaving(false); // re-enable if failed
     }
   };
 
@@ -194,17 +200,19 @@ const Page = () => {
           </div>
           <button
             id="saveBtn"
+            disabled={saving}
+            className={`px-4 py-2 rounded-lg font-semibold ${saving ? "bg-gray-400 cursor-not-allowed" : "bg-green-500 hover:scale-105"
+              }`}
             onClick={async () => {
-              const confirmSave = window.confirm(
-                "Do you want to save the attendance?"
-              );
+              const confirmSave = window.confirm("Do you want to save the attendance?");
               if (confirmSave) {
                 await handleSave();
               }
             }}
           >
-            ✅ Save Attendance
+            {saving ? "⏳ Saving..." : "✅ Save Attendance"}
           </button>
+
 
 
           <div id="summary">

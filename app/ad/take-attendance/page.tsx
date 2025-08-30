@@ -40,7 +40,7 @@ const Page = () => {
             `${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}/api/attendance`,
             { withCredentials: true }
           );
-          console.log(response)
+          // console.log(response)
           const grouped = response.data?.students;
           setStudentData(grouped && typeof grouped === "object" ? grouped : {});
           setloadingCircle(false);
@@ -107,6 +107,8 @@ const Page = () => {
       alert(message);
       setSaving(false); // re-enable if failed
     }
+
+
   };
 
 
@@ -161,42 +163,70 @@ const Page = () => {
             🔙 Back to Dashboard
           </button>
           <div id="attendance-container">
-            {Object.entries(studentData).map(([room, students]) => (
-              <div className="room-card" key={room}>
-                <div className="room-title">Room {room}</div>
-                <div className="student-list">
-                  {students.map((student) => (
-                    <div
-                      className={`student-card ${student.leave ? "opacity-60 bg-gray-200" : ""}`}
-                      key={student.accNo}
-                    >
-                      <div className="student-name">
-                        {student.name} ({student.dNo}){" "}
-                        {student.leave && <span className="text-red-500 font-bold">[On Leave]</span>}
-                      </div>
+            {Object.entries(studentData)
+              .sort(([roomA], [roomB]) => {
+                const [blockA, roomNoA] = roomA.split("-");
+                const [blockB, roomNoB] = roomB.split("-");
 
-                      {!student.leave && (
-                        <div className="status-buttons">
-                          <button
-                            className={`status-btn present ${statusMap[student.accNo] === "present" ? "active" : ""}`}
-                            onClick={() => handleStatusChange(student.accNo.toString(), "present")}
-                          >
-                            P
-                          </button>
-                          <button
-                            className={`status-btn absent ${statusMap[student.accNo] === "absent" ? "active" : ""}`}
-                            onClick={() => handleStatusChange(student.accNo.toString(), "absent")}
-                          >
-                            A
-                          </button>
-                        </div>
-                      )}
+                // 1️⃣ Compare blocks alphabetically
+                if (blockA < blockB) return -1;
+                if (blockA > blockB) return 1;
+
+                // 2️⃣ Compare room numbers numerically
+                return Number(roomNoA) - Number(roomNoB);
+              })
+              .map(([room, students]) => {
+                const [block, roomNo] = room.split("-");
+                return (
+                  <div className="room-card" key={room}>
+                    <div className="room-title">
+                      Block {block}, Room {roomNo}
                     </div>
-                  ))}
 
-                </div>
-              </div>
-            ))}
+                    <div className="student-list">
+                      {students.map((student) => (
+                        <div
+                          className={`student-card ${student.leave ? "opacity-60 bg-gray-200" : ""
+                            }`}
+                          key={student.accNo}
+                        >
+                          <div className="student-name">
+                            {student.name} ({student.dNo}){" "}
+                            {student.leave && (
+                              <span className="text-red-500 font-bold">[On Leave]</span>
+                            )}
+                          </div>
+
+                          {!student.leave && (
+                            <div className="status-buttons">
+                              <button
+                                className={`status-btn present ${statusMap[student.accNo] === "present" ? "active" : ""
+                                  }`}
+                                onClick={() =>
+                                  handleStatusChange(student.accNo.toString(), "present")
+                                }
+                              >
+                                P
+                              </button>
+                              <button
+                                className={`status-btn absent ${statusMap[student.accNo] === "absent" ? "active" : ""
+                                  }`}
+                                onClick={() =>
+                                  handleStatusChange(student.accNo.toString(), "absent")
+                                }
+                              >
+                                A
+                              </button>
+                            </div>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                );
+              })}
+
+
           </div>
           <button
             id="saveBtn"

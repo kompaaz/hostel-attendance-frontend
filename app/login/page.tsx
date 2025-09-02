@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { useRouter } from "next/navigation";
 import axios from "axios";
+import Loading from "../components/Loading";
 
 const LoginPage = () => {
   const [checkingUserStatus, setcheckingUserStatus] = useState(true);
@@ -88,14 +89,15 @@ const LoginPage = () => {
   return (
     <>
       {checkingUserStatus ? (
-        <div className="h-screen w-screen flex items-center justify-center">
-          <div className="flex gap-2">
-            <div className="flex gap-3">
-              <div className="h-7 w-7 border-4 border-t-green-500 border-b-white rounded-full animate-spin"></div>
-            </div>
-            <h1 className="text-2xl">Loading...</h1>
-          </div>
-        </div>
+        // <div className="h-screen w-screen flex items-center justify-center bg-gray-50">
+        //     <div className="flex flex-col items-center gap-3">
+        //         <div className="h-8 w-8 border-4 border-t-black border-gray-200 rounded-full animate-spin"></div>
+        //         <h1 className="text-xl font-semibold text-black">Logging out...</h1>
+        //     </div>
+        // </div>
+        <>
+          <Loading />
+        </>
       ) : (
         <div className="h-screen bg-gray-50 flex items-center justify-center px-4">
           <div className="w-full max-w-md bg-white rounded-2xl shadow-md p-8">

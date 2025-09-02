@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
+import Loading from "@/app/components/Loading";
 
 const StudentAttendance = () => {
     const [loading, setLoading] = useState(true);
@@ -51,17 +52,12 @@ const StudentAttendance = () => {
 
     if (loading) {
         return (
-            <div className="h-screen w-screen flex items-center justify-center">
-                <div className="flex gap-2 items-center">
-                    <div className="h-7 w-7 border-4 border-t-green-500 border-b-transparent rounded-full animate-spin"></div>
-                    <h1 className="text-2xl font-semibold text-black">Loading...</h1>
-                </div>
-            </div>
+           <Loading />
         );
     }
 
     return (
-        <div className="min-h-screen bg-gray-100 flex items-center justify-center px-4">
+        <div className="min-h-screen py-10 bg-gray-100 flex items-center justify-center px-4">
             <div className="w-full max-w-2xl bg-white rounded-2xl shadow-xl p-8 font-mono text-center space-y-6">
                 {/* Title */}
                 <h2 className="text-2xl md:text-3xl font-bold text-center text-black mb-1 font-mono">

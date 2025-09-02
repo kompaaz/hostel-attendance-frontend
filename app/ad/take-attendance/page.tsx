@@ -134,7 +134,7 @@ const Page = () => {
       ) : (
         <>
             <div className="w-screen flex justify-center mt-5">
-            <div className="bg-blue-500 w-[90vw] flex flex-col justify-center">
+            <div className="w-[90vw] flex flex-col justify-center">
               <header className="mb-5">
                 <div className="header-left">
                   <img src="/logo.png" alt="Logo" />

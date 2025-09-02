@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
+import Loading from "@/app/components/Loading";
 
 interface RecordEntry {
     _id: string;
@@ -178,12 +179,7 @@ const AnalyticsPage = () => {
 
     if (loading) {
         return (
-            <div className="min-h-screen bg-white flex items-center justify-center">
-                <div className="flex gap-2 items-center">
-                    <div className="h-7 w-7 border-4 border-t-green-500 border-gray-200 rounded-full animate-spin"></div>
-                    <h1 className="text-lg font-semibold text-gray-700">Loading attendance data...</h1>
-                </div>
-            </div>
+            <Loading />
         );
     }
 

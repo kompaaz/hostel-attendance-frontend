@@ -48,15 +48,11 @@ const LoginPage = () => {
 
     try {
       const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}/api/auth/login`,
+        "/api/auth/login",
         { username, password },
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-          withCredentials: true,
-        }
+        { withCredentials: true }
       );
+
       // console.log(response);
       const userRole = response.data?.user?.role;
 

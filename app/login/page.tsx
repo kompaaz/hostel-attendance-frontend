@@ -53,6 +53,11 @@ const LoginPage = () => {
         { withCredentials: true }
       );
 
+      console.log("🔹 Full response:", response);
+      console.log("🔹 Response data:", response.data);
+      console.log("🔹 User:", response.data.user);
+      console.log("🔹 Role:", response.data.user?.role);
+
       // console.log(response);
       const userRole = response.data?.user?.role;
 

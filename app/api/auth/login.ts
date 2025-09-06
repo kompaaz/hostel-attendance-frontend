@@ -53,10 +53,24 @@ export default async function handler(
     );
 
     // 4. Set cookie (shared across subdomains)
-    res.setHeader(
-      "Set-Cookie",
-      `token=${token}; HttpOnly; Secure; SameSite=None; Path=/; Domain=.devnoel.org; Max-Age=3600`
-    );
+    const cookieDomain =
+      process.env.NODE_ENV === "production" ? ".devnoel.org" : "localhost";
+
+    const isProd = process.env.NODE_ENV === "production";
+
+    const cookieOptions = [
+      `token=${token}`,
+      "HttpOnly",
+      isProd ? "Secure" : "", // Secure only in prod
+      `SameSite=${isProd ? "None" : "Lax"}`, // None for cross-domain prod, Lax for local
+      "Path=/",
+      isProd ? `Domain=${cookieDomain}` : "",
+      "Max-Age=3600",
+    ]
+      .filter(Boolean)
+      .join("; ");
+
+    res.setHeader("Set-Cookie", cookieOptions);
 
     return res.status(200).json({
       message: "Login successful",

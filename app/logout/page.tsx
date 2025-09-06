@@ -9,13 +9,10 @@ const LogoutPage = () => {
     useEffect(() => {
         const logout = async () => {
             try {
-                await axios.get(
-                    `${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}/api/auth/logout`,
-                    { withCredentials: true }
-                );
+                await axios.get("/api/auth/logout", { withCredentials: true });
                 localStorage.clear();
             } catch (error) {
-                console.error("Logout failed:", error);
+                console.error("❌ Logout failed:", error);
             } finally {
                 // Always redirect to login
                 router.push("/login");

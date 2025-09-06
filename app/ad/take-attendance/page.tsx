@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import "../../styles/attendance.css";
 import axios from "axios";
 import { useRouter } from "next/navigation";
+import Loading from "@/app/components/Loading";
 
 type Student = {
   _id: string;
@@ -127,126 +128,125 @@ const Page = () => {
   return (
     <>
       {loadingCircle ? (
-        <div className="h-screen w-screen flex items-center justify-center">
-          <div className="flex gap-2">
-            <div className="flex gap-3">
-              <div className="h-7 w-7 border-4 border-t-green-500 border-b-white rounded-full animate-spin"></div>
-            </div>
-            <h1 className="text-2xl">Loading...</h1>
-          </div>
+        <div className="h-screen w-screen bg-blue-300">
+          <Loading />
         </div>
       ) : (
         <>
-          <header className="mb-5">
-            <div className="header-left">
-              <img src="/logo.png" alt="Logo" />
-              <h1 className="text-3xl font-bold">E-Attendance</h1>
-            </div>
-            <div id="datetime">
-              {datetime &&
-                datetime.toLocaleString("en-GB", {
-                  weekday: "short",
-                  day: "2-digit",
-                  month: "short",
-                  year: "numeric",
-                  hour: "numeric",
-                  minute: "numeric",
-                  second: "numeric",
-                  hour12: true,
-                })}
-            </div>
-          </header>
-          <button
-            onClick={() => router.push("/ad/dashboard")}
-            className="mb-4 px-4 py-2 rounded-lg border font-mono border-black bg-white text-black font-semibold transition hover:scale-105"
-          >
-            🔙 Back to Dashboard
-          </button>
-          <div id="attendance-container">
-            {Object.entries(studentData)
-              .sort(([roomA], [roomB]) => {
-                const [blockA, roomNoA] = roomA.split("-");
-                const [blockB, roomNoB] = roomB.split("-");
+            <div className="w-screen flex justify-center mt-5">
+            <div className="w-[90vw] flex flex-col justify-center">
+              <header className="mb-5">
+                <div className="header-left">
+                  <img src="/logo.png" alt="Logo" />
+                  <h1 className="text-3xl font-bold">E-Attendance</h1>
+                </div>
+                <div id="datetime">
+                  {datetime &&
+                    datetime.toLocaleString("en-GB", {
+                      weekday: "short",
+                      day: "2-digit",
+                      month: "short",
+                      year: "numeric",
+                      hour: "numeric",
+                      minute: "numeric",
+                      second: "numeric",
+                      hour12: true,
+                    })}
+                </div>
+              </header>
+              <button
+                onClick={() => router.push("/ad/dashboard")}
+                className="mb-4 px-4 py-2 rounded-lg border font-mono border-black bg-white text-black font-semibold transition hover:scale-105"
+              >
+                🔙 Back to Dashboard
+              </button>
+              <div id="attendance-container">
+                {Object.entries(studentData)
+                  .sort(([roomA], [roomB]) => {
+                    const [blockA, roomNoA] = roomA.split("-");
+                    const [blockB, roomNoB] = roomB.split("-");
 
-                // 1️⃣ Compare blocks alphabetically
-                if (blockA < blockB) return -1;
-                if (blockA > blockB) return 1;
+                    // 1️⃣ Compare blocks alphabetically
+                    if (blockA < blockB) return -1;
+                    if (blockA > blockB) return 1;
 
-                // 2️⃣ Compare room numbers numerically
-                return Number(roomNoA) - Number(roomNoB);
-              })
-              .map(([room, students]) => {
-                const [block, roomNo] = room.split("-");
-                return (
-                  <div className="room-card" key={room}>
-                    <div className="room-title">
-                      Block {block}, Room {roomNo}
-                    </div>
-
-                    <div className="student-list">
-                      {students.map((student) => (
-                        <div
-                          className={`student-card ${student.leave ? "opacity-60 bg-gray-200" : ""
-                            }`}
-                          key={student.accNo}
-                        >
-                          <div className="student-name">
-                            {student.name} ({student.dNo}){" "}
-                            {student.leave && (
-                              <span className="text-red-500 font-bold">[On Leave]</span>
-                            )}
-                          </div>
-
-                          {!student.leave && (
-                            <div className="status-buttons">
-                              <button
-                                className={`status-btn present ${statusMap[student.accNo] === "present" ? "active" : ""
-                                  }`}
-                                onClick={() =>
-                                  handleStatusChange(student.accNo.toString(), "present")
-                                }
-                              >
-                                P
-                              </button>
-                              <button
-                                className={`status-btn absent ${statusMap[student.accNo] === "absent" ? "active" : ""
-                                  }`}
-                                onClick={() =>
-                                  handleStatusChange(student.accNo.toString(), "absent")
-                                }
-                              >
-                                A
-                              </button>
-                            </div>
-                          )}
+                    // 2️⃣ Compare room numbers numerically
+                    return Number(roomNoA) - Number(roomNoB);
+                  })
+                  .map(([room, students]) => {
+                    const [block, roomNo] = room.split("-");
+                    return (
+                      <div className="room-card" key={room}>
+                        <div className="room-title">
+                          Block {block}, Room {roomNo}
                         </div>
-                      ))}
-                    </div>
-                  </div>
-                );
-              })}
+
+                        <div className="student-list">
+                          {students.map((student) => (
+                            <div
+                              className={`student-card ${student.leave ? "opacity-60 bg-gray-200" : ""
+                                }`}
+                              key={student.accNo}
+                            >
+                              <div className="student-name">
+                                {student.name} ({student.dNo}){" "}
+                                {student.leave && (
+                                  <span className="text-red-500 font-bold">[On Leave]</span>
+                                )}
+                              </div>
+
+                              {!student.leave && (
+                                <div className="status-buttons">
+                                  <button
+                                    className={`status-btn present ${statusMap[student.accNo] === "present" ? "active" : ""
+                                      }`}
+                                    onClick={() =>
+                                      handleStatusChange(student.accNo.toString(), "present")
+                                    }
+                                  >
+                                    P
+                                  </button>
+                                  <button
+                                    className={`status-btn absent ${statusMap[student.accNo] === "absent" ? "active" : ""
+                                      }`}
+                                    onClick={() =>
+                                      handleStatusChange(student.accNo.toString(), "absent")
+                                    }
+                                  >
+                                    A
+                                  </button>
+                                </div>
+                              )}
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    );
+                  })}
 
 
-          </div>
-          <button
-            id="saveBtn"
-            disabled={saving}
-            className={`px-4 py-2 rounded-lg font-semibold ${saving ? "bg-gray-400 cursor-not-allowed" : "bg-green-500 hover:scale-105"
-              }`}
-            onClick={async () => {
-              const confirmSave = window.confirm("Do you want to save the attendance?");
-              if (confirmSave) {
-                await handleSave();
-              }
-            }}
-          >
-            {saving ? "⏳ Saving..." : "✅ Save Attendance"}
-          </button>
+              </div>
+              <button
+                id="saveBtn"
+                disabled={saving}
+                className={`px-4 py-2 rounded-lg font-semibold ${saving ? "bg-gray-400 cursor-not-allowed" : "bg-green-500 hover:scale-105"
+                  }`}
+                onClick={async () => {
+                  const confirmSave = window.confirm("Do you want to save the attendance?");
+                  if (confirmSave) {
+                    await handleSave();
+                  }
+                }}
+              >
+                {saving ? "⏳ Saving..." : "✅ Save Attendance"}
+              </button>
 
 
 
-          <div id="summary">
-            Total Present: {present} | Total Absent: {absent} | Total Leave: {leave}
+              <div id="summary">
+                Total Present: {present} | Total Absent: {absent} | Total Leave: {leave}
+              </div>
+            </div>
           </div>
         </>
       )}

@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import Logout from "../../components/Logout";
+import Loading from "@/app/components/Loading";
 
 const StudentDashboard = () => {
     const [studentName, setStudentName] = useState("Student");
@@ -68,12 +69,7 @@ const StudentDashboard = () => {
     return (
         <>
             {loadingCircle ? (
-                <div className="h-screen w-screen flex items-center justify-center">
-                    <div className="flex gap-2">
-                        <div className="h-7 w-7 border-4 border-t-green-500 border-b-white rounded-full animate-spin"></div>
-                        <h1 className="text-2xl">Loading...</h1>
-                    </div>
-                </div>
+                <Loading />
             ) : (
                 <div className="min-h-screen bg-gray-100 flex items-center justify-center px-4">
                     <div className="w-full max-w-md bg-white rounded-2xl shadow-md p-8 font-mono text-center space-y-6">

@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
+import Loading from "@/app/components/Loading";
 
 const StudentProfile = () => {
     const [loading, setLoading] = useState(true);
@@ -36,12 +37,7 @@ const StudentProfile = () => {
 
     if (loading) {
         return (
-            <div className="h-screen w-screen flex items-center justify-center">
-                <div className="flex gap-2 items-center">
-                    <div className="h-7 w-7 border-4 border-t-green-500 border-b-transparent rounded-full animate-spin"></div>
-                    <h1 className="text-2xl font-semibold text-black">Loading...</h1>
-                </div>
-            </div>
+            <Loading />
         );
     }
 

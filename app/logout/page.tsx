@@ -14,11 +14,9 @@ const LogoutPage = () => {
                     { withCredentials: true }
                 );
                 localStorage.clear();
+                router.push("/login");
             } catch (error) {
                 console.error("Logout failed:", error);
-            } finally {
-                // Always redirect to login
-                router.push("/login");
             }
         };
 

@@ -27,7 +27,7 @@ const AdDashboard = () => {
         );
 
         const role = response.data.role;
-        console.log(role);
+        // console.log(role);
 
         if (role == "student") {
           router.push("/student/dashboard");
@@ -36,7 +36,7 @@ const AdDashboard = () => {
         // is user is not logged in we are redirecting to login
         const isLoggedIn = response.data.isLoggedIn;
         // console.log(isLoggedIn);
-        console.log(response);
+        // console.log(response);
 
         if (isLoggedIn) {
 
@@ -52,7 +52,7 @@ const AdDashboard = () => {
         }
         router.push("/login");
       } catch (error) {
-        console.log("Error in isUserLoggedIn \n" + error);
+        // console.log("Error in isUserLoggedIn \n" + error);
       }
     })();
   }, []);

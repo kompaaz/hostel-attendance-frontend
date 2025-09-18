@@ -14,33 +14,33 @@ const LoginPage = () => {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
-  useEffect(() => {
-    (async () => {
-      try {
-        const response = await axios.get(
-          `${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}/api/auth/authenticate`,
-          { withCredentials: true }
-        );
-        const isLoggedIn = response.data.isLoggedIn;
-        const userRole = response.data.role;
+  // useEffect(() => {
+  //   (async () => {
+  //     try {
+  //       const response = await axios.get(
+  //         `${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}/api/auth/authenticate`,
+  //         { withCredentials: true }
+  //       );
+  //       const isLoggedIn = response.data.isLoggedIn;
+  //       const userRole = response.data.role;
 
-        if (!isLoggedIn) {
-          return setcheckingUserStatus(false);
-        }
-        if (userRole === "director") {
-          router.push("/director/dashboard");
-        } else if (userRole === "student") {
-          router.push("/student/dashboard");
-        } else if (userRole === "ad") {
-          router.push("/ad/dashboard");
-        } else {
-          setError("❌ Unknown role. Contact support.");
-        }
-      } catch (error) {
-        // console.log("Error in isUserLoggedIn \n" + error);
-      }
-    })();
-  }, []);
+  //       if (!isLoggedIn) {
+  //         return setcheckingUserStatus(false);
+  //       }
+  //       if (userRole === "director") {
+  //         router.push("/director/dashboard");
+  //       } else if (userRole === "student") {
+  //         router.push("/student/dashboard");
+  //       } else if (userRole === "ad") {
+  //         router.push("/ad/dashboard");
+  //       } else {
+  //         setError("❌ Unknown role. Contact support.");
+  //       }
+  //     } catch (error) {
+  //       // console.log("Error in isUserLoggedIn \n" + error);
+  //     }
+  //   })();
+  // }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

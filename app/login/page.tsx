@@ -6,7 +6,7 @@ import axios from "axios";
 import Loading from "../components/Loading";
 
 const LoginPage = () => {
-  const [checkingUserStatus, setcheckingUserStatus] = useState(true);
+  const [checkingUserStatus, setcheckingUserStatus] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
